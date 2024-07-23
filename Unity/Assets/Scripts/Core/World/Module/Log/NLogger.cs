@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !UNITY_WEBGL
+using System;
 using NLog;
 
 namespace ET
@@ -76,3 +77,4 @@ namespace ET
 #endif
     }
 }
+#endif

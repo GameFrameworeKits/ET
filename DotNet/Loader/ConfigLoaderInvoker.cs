@@ -42,6 +42,7 @@ namespace ET
     {
         public override byte[] Handle(ConfigLoader.GetOneConfigBytes args)
         {
+            await ETTask.CompletedTask;
             byte[] configBytes = File.ReadAllBytes($"../Config/Excel/s/{args.ConfigName}.bytes");
             return configBytes;
         }
