@@ -95,9 +95,11 @@ fi
 dotnet $LUBAN_DLL \
     --customTemplateDir CustomTemplate \
     -t all \
+    -c cs-bin \
     -d bin \
     -d json \
     --conf $CONF_ROOT/StartConfig/Release/__luban__.conf \
+    -x outputCodeDir=$WORKSPACE/Unity/Assets/Scripts/Model/Generate/ClientServer/Config/StartConfig \
     -x bin.outputDataDir=$WORKSPACE/Config/Excel/cs/StartConfig/Release \
     -x json.outputDataDir=$WORKSPACE/Config/Json/cs/StartConfig/Release \
     -x lineEnding=CRLF 
