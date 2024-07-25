@@ -99,7 +99,7 @@ dotnet $LUBAN_DLL \
     -d json \
     --conf $CONF_ROOT/StartConfig/Release/__luban__.conf \
     -x bin.outputDataDir=$WORKSPACE/Config/Excel/cs/StartConfig/Release \
-    -x json.outputDataDir=$WORKSPACE/Config/Json/css/StartConfig/Release \
+    -x json.outputDataDir=$WORKSPACE/Config/Json/cs/StartConfig/Release \
     -x lineEnding=CRLF 
 
 echo ==================== StartConfig : GenReleaseClientServerFinish ====================
