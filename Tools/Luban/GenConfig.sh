@@ -41,6 +41,29 @@ dotnet $LUBAN_DLL \
 
 echo ==================== FuncConfig : GenServerFinish ====================
 
+
+if [ $? -ne 0 ]; then
+    echo "An error occurred, press any key to exit."
+    read -n 1 -s
+    exit 1
+fi
+
+# ClientServer
+dotnet $LUBAN_DLL \
+    --customTemplateDir CustomTemplate \
+    -t all \
+    -c cs-bin \
+    -d bin \
+    -d json \
+    --conf $CONF_ROOT/__luban__.conf \
+    -x outputCodeDir=$WORKSPACE/Unity/Assets/Scripts/Model/Generate/ClientServer/Config \
+    -x bin.outputDataDir=$WORKSPACE/Config/Excel/cs \
+    -x json.outputDataDir=$WORKSPACE/Config/Json/cs \
+    -x lineEnding=CRLF 
+
+echo ==================== FuncConfig : GenClientServerFinish ====================
+
+
 if [ $? -ne 0 ]; then
     echo "An error occurred, press any key to exit."
     read -n 1 -s
@@ -68,6 +91,25 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# StartConfig ClientServer Release
+dotnet $LUBAN_DLL \
+    --customTemplateDir CustomTemplate \
+    -t all \
+    -d bin \
+    -d json \
+    --conf $CONF_ROOT/StartConfig/Release/__luban__.conf \
+    -x bin.outputDataDir=$WORKSPACE/Config/Excel/cs/StartConfig/Release \
+    -x json.outputDataDir=$WORKSPACE/Config/Json/css/StartConfig/Release \
+    -x lineEnding=CRLF 
+
+echo ==================== StartConfig : GenReleaseClientServerFinish ====================
+
+if [ $? -ne 0 ]; then
+    echo "An error occurred, press any key to exit."
+    read -n 1 -s
+    exit 1
+fi
+
 # StartConfig Benchmark
 dotnet $LUBAN_DLL \
     --customTemplateDir CustomTemplate \
@@ -79,6 +121,24 @@ dotnet $LUBAN_DLL \
     -x json.outputDataDir=$WORKSPACE/Config/Json/s/StartConfig/Benchmark 
 
 echo ==================== StartConfig : GenBenchmarkFinish ====================
+
+if [ $? -ne 0 ]; then
+    echo "An error occurred, press any key to exit."
+    read -n 1 -s
+    exit 1
+fi
+
+# StartConfig ClientServer Benchmark
+dotnet $LUBAN_DLL \
+    --customTemplateDir CustomTemplate \
+    -t all \
+    -d bin \
+    -d json \
+    --conf $CONF_ROOT/StartConfig/Benchmark/__luban__.conf \
+    -x bin.outputDataDir=$WORKSPACE/Config/Excel/cs/StartConfig/Benchmark \
+    -x json.outputDataDir=$WORKSPACE/Config/Json/cs/StartConfig/Benchmark 
+
+echo ==================== StartConfig : GenBenchmarkClientServerFinish ====================
 
 if [ $? -ne 0 ]; then
     echo "An error occurred, press any key to exit."
@@ -104,6 +164,25 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# StartConfig ClientServer Localhost
+dotnet $LUBAN_DLL \
+    --customTemplateDir CustomTemplate \
+    -t all \
+    -d bin \
+    -d json \
+    --conf $CONF_ROOT/StartConfig/Localhost/__luban__.conf \
+    -x bin.outputDataDir=$WORKSPACE/Config/Excel/cs/StartConfig/Localhost \
+    -x json.outputDataDir=$WORKSPACE/Config/Json/cs/StartConfig/Localhost 
+
+echo ==================== StartConfig : GenLocalhostClientServerFinish ====================
+
+
+if [ $? -ne 0 ]; then
+    echo "An error occurred, press any key to exit."
+    read -n 1 -s
+    exit 1
+fi
+
 # StartConfig RouterTest
 dotnet $LUBAN_DLL \
     --customTemplateDir CustomTemplate \
@@ -115,5 +194,23 @@ dotnet $LUBAN_DLL \
     -x json.outputDataDir=$WORKSPACE/Config/Json/s/StartConfig/RouterTest 
 
 echo ==================== StartConfig : GenRouterTestFinish ====================
+
+if [ $? -ne 0 ]; then
+    echo "An error occurred, press any key to exit."
+    read -n 1 -s
+    exit 1
+fi
+
+# StartConfig ClientServer RouterTest
+dotnet $LUBAN_DLL \
+    --customTemplateDir CustomTemplate \
+    -t all \
+    -d bin \
+    -d json \
+    --conf $CONF_ROOT/StartConfig/RouterTest/__luban__.conf \
+    -x bin.outputDataDir=$WORKSPACE/Config/Excel/cs/StartConfig/RouterTest \
+    -x json.outputDataDir=$WORKSPACE/Config/Json/cs/StartConfig/RouterTest 
+
+echo ==================== StartConfig : GenRouterTestClientServerFinish ====================
 
 read -n 1 -p "Press any key to continue..."
