@@ -14,6 +14,7 @@ namespace Luban
         {
             foreach (var p in o.GetType().GetFields())
             {
+
                 sb.Append($"{p.Name} = {p.GetValue(o)},");
             }
 
@@ -29,10 +30,12 @@ namespace Luban
             return "[" + string.Join(",", arr) + "]";
         }
 
+
         public static string CollectionToString<T>(IEnumerable<T> arr)
         {
             return "[" + string.Join(",", arr) + "]";
         }
+
 
         public static string CollectionToString<TK, TV>(IDictionary<TK, TV> dic)
         {
