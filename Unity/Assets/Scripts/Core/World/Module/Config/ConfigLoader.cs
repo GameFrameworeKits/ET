@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 #if DOTNET || UNITY_STANDALONE
 using System.Threading.Tasks;
@@ -20,6 +21,8 @@ namespace ET
             public string ConfigName;
         }
 
+        private readonly ConcurrentDictionary<Type, ASingleton> allConfig = new();
+
         public void Awake()
         {
         }
@@ -35,16 +38,21 @@ namespace ET
         {
             Dictionary<Type, byte[]> configBytes = await EventSystem.Instance.Invoke<GetAllConfigBytes, ETTask<Dictionary<Type, byte[]>>>(new GetAllConfigBytes());
 
-#if DOTNET || UNITY_STANDALONE
+#if UNITY_WEBGL
+            this.allConfig.Clear();
+			foreach (Type type in configBytes.Keys)
+			{
+				byte[] oneConfigBytes = configBytes[type];
+				LoadOneInThread(type, oneConfigBytes);
+			}
+#elif DOTNET || UNITY_STANDALONE
             using ListComponent<Task> listTasks = ListComponent<Task>.Create();
-
             foreach (Type type in configBytes.Keys)
             {
                 byte[] oneConfigBytes = configBytes[type];
                 Task task = Task.Run(() => LoadOneConfig(type, oneConfigBytes));
                 listTasks.Add(task);
             }
-
             await Task.WhenAll(listTasks.ToArray());
 #else
             foreach (Type type in configBytes.Keys)
@@ -60,5 +68,16 @@ namespace ET
             ASingleton singleton = category as ASingleton;
             World.Instance.AddSingleton(singleton);
         }
+
+        private void LoadOneInThread(Type configType, byte[] oneConfigBytes)
+		{
+			object category = MongoHelper.Deserialize(configType, oneConfigBytes, 0, oneConfigBytes.Length);
+			lock (this)
+			{
+				ASingleton singleton = category as ASingleton;
+				this.allConfig[configType] = singleton;
+				World.Instance.AddSingleton(singleton);
+			}
+		}
     }
 }

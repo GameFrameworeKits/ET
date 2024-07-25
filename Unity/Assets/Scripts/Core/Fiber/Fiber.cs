@@ -58,7 +58,7 @@ namespace ET
             this.EntitySystem = new EntitySystem();
             this.Mailboxes = new Mailboxes();
             this.ThreadSynchronizationContext = new ThreadSynchronizationContext();
-#if UNITY
+#if UNITY || UNITY_WEBGL
             this.Log = Logger.Instance.Log;
 #else
             this.Log = new NLogger(sceneType.ToString(), this.Process, this.Id);
