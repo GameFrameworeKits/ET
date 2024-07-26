@@ -1,19 +1,29 @@
 #!/bin/bash
 
-# Set the working directory to the directory of the script
-WORKDIR=$(dirname "$0")
+# 将工作目录设置为脚本所在的目录
+WORKDIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Display the script directory
+# 显示脚本所在的目录
 echo "Script directory: $WORKDIR"
 
-# Define the path to hfs.exe (assuming Wine is used to run Windows executables on Unix/Linux)
-HFS_PATH="$WORKDIR/mac/hfs.exe"
+# 定义HFS可执行文件的路径
+HFS_PATH="$WORKDIR/mac/hfs"
+
+# 设置HFS文件的执行权限
+chmod +x "$HFS_PATH"
+
+# 检查HFS文件是否存在并可执行
+if [ ! -x "$HFS_PATH" ]; then
+    echo "HFS executable is not found or is not executable. Please check the file permissions."
+    exit 1
+fi
 
 # Change the current directory to the 'mac' folder
 cd "$WORKDIR/mac"
 
-# Start hfs.exe using Wine
-wine "$HFS_PATH"
+# 运行HFS
+"$HFS_PATH"
 
-# Pause the script to view any output
+# 暂停脚本以查看输出
 read -p "Press enter to continue..."
+
