@@ -22,7 +22,7 @@ namespace ET
             public string ConfigName;
         }
 
-        private readonly ConcurrentDictionary<Type, ASingleton> allConfig = new();
+        private readonly ConcurrentDictionary<Type, IConfig> allConfig = new();
 
         public void Awake()
         {
@@ -31,7 +31,7 @@ namespace ET
         public async ETTask Reload(Type configType)
         {
             GetOneConfigBytes getOneConfigBytes = new() { ConfigName = configType.Name };
-            ByteBuf oneConfigBytes = await EventSystem.Instance.Invoke<GetOneConfigBytes, ETTask<ByteBuf>>(getOneConfigBytes);
+            var oneConfigBytes = await EventSystem.Instance.Invoke<GetOneConfigBytes, ETTask<ByteBuf>>(getOneConfigBytes);
             LoadOneConfig(configType, oneConfigBytes);
             ResolveRef(); //热重载某一个配置的时候也要触发所有配置否则可能会引起各种引用丢失问题 不确定是否还有潜在问题 热重载配置还需观察
         }
@@ -39,7 +39,7 @@ namespace ET
         public async ETTask LoadAsync()
         {
             this.allConfig.Clear();
-            Dictionary<Type, ByteBuf> configBytes = await EventSystem.Instance.Invoke<GetAllConfigBytes, ETTask<Dictionary<Type, ByteBuf>>>(new GetAllConfigBytes());
+            var configBytes = await EventSystem.Instance.Invoke<GetAllConfigBytes, ETTask<Dictionary<Type, ByteBuf>>>(new GetAllConfigBytes());
 
 #if UNITY_WEBGL
 			foreach (Type type in configBytes.Keys)
@@ -64,16 +64,16 @@ namespace ET
 #endif
         }
 
-        private static void LoadOneConfig(Type configType, ByteBuf oneConfigBytes)
+        private void LoadOneConfig(Type configType, ByteBuf oneConfigBytes)
         {
-            object category = MongoHelper.Deserialize(configType, oneConfigBytes, 0, oneConfigBytes.Length);
+            object category = Activator.CreateInstance(configType, oneConfigBytes);
             this.allConfig[configType] = category as IConfig;
             World.Instance.AddSingleton(category as ASingleton);
         }
 
         private void LoadOneInThread(Type configType, ByteBuf oneConfigBytes)
 		{
-			object category = MongoHelper.Deserialize(configType, oneConfigBytes, 0, oneConfigBytes.Length);
+            object category = Activator.CreateInstance(configType, oneConfigBytes);
 			lock (this)
 			{
                 this.allConfig[configType] =  category as IConfig;;
