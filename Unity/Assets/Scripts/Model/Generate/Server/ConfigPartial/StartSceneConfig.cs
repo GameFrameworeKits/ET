@@ -75,7 +75,7 @@ namespace ET
         }
     }
     
-    public partial class StartSceneConfig: ISupportInitialize
+    public partial class StartSceneConfig
     {
         public ActorId ActorId;
         
