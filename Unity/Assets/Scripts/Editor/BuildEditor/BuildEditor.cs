@@ -55,6 +55,8 @@ namespace ET
             activePlatform = PlatformType.MacOS;
 #elif UNITY_STANDALONE_LINUX
             activePlatform = PlatformType.Linux;
+#elif UNITY_WEBGL
+            activePlatform = PlatformType.WebGL;
 #else
             activePlatform = PlatformType.None;
 #endif

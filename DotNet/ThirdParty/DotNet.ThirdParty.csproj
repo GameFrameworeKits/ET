@@ -40,6 +40,10 @@
             <Link>ETTask/%(RecursiveDir)%(FileName)%(Extension)</Link>
         </Compile>
 
+        <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\LubanLib\**\*.cs">
+            <Link>DotRecast/%(RecursiveDir)%(FileName)%(Extension)</Link>
+        </Compile>
+
         <Compile Include="..\..\Unity\Assets\Scripts\ThirdParty\Kcp\**\*.cs">
             <Link>Kcp/%(RecursiveDir)%(FileName)%(Extension)</Link>
         </Compile>

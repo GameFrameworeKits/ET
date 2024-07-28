@@ -17,3 +17,4 @@ MonoBehaviour:
   BuildType: 1
   AppType: 7
   EPlayMode: 0
+  BundleUrl: http://127.0.0.1

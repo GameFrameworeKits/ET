@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "besthttp.besthttp": {
+      "version": "file:BestHTTP",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.code-philosophy.hybridclr": {
       "version": "https://gitee.com/focus-creative-games/hybridclr_unity.git",
       "depth": 0,
@@ -95,7 +101,7 @@
       }
     },
     "com.unity.render-pipelines.universal": {
-      "version": "14.0.11",
+      "version": "14.0.9",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
