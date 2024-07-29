@@ -1,0 +1,19 @@
+{
+    "name": "GFET.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:9ef2053bcf13a254ab3940a767f7b1a5",
+        "GUID:2bafac87e7f4b9b418d9448d219b01ab",
+        "GUID:e34a5702dd353724aa315fb8011f08c3",
+        "GUID:1aa3e8589868c80499255710874679c0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
