@@ -1,7 +1,10 @@
 {
     "name": "EGF.Runtime",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "UniTask",
+        "YooAsset"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
