@@ -7,8 +7,9 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace ET
+namespace GFUI
 {
     public static partial class ReferencePool
     {
@@ -93,7 +94,7 @@ namespace ET
             {
                 if (typeof(T) != m_ReferenceType)
                 {
-                    Log.Error("Type is invalid.");
+                    Debug.LogError("Type is invalid.");
                 }
 
                 m_UsingReferenceCount++;
@@ -133,7 +134,7 @@ namespace ET
                 {
                     if (m_EnableStrictCheck && m_References.Contains(reference))
                     {
-                        Log.Error("The reference has been released.");
+                        Debug.LogError("The reference has been released.");
                     }
 
                     m_References.Enqueue(reference);
@@ -147,7 +148,7 @@ namespace ET
             {
                 if (typeof(T) != m_ReferenceType)
                 {
-                    Log.Error("Type is invalid.");
+                    Debug.LogError("Type is invalid.");
                 }
 
                 lock (m_References)

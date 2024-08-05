@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace ET
+namespace GFUI
 {
     /// <summary>
     /// 引用接口。

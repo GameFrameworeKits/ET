@@ -7,8 +7,9 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace ET
+namespace GFUI
 {
     /// <summary>
     /// 引用池。
@@ -110,7 +111,7 @@ namespace ET
         {
             if (reference == null)
             {
-                Log.Error("Reference is invalid.");
+                Debug.LogError("Reference is invalid.");
             }
 
             Type referenceType = reference.GetType();
@@ -188,17 +189,17 @@ namespace ET
 
             if (referenceType == null)
             {
-                Log.Error("Reference type is invalid.");
+                Debug.LogError("Reference type is invalid.");
             }
 
             if (!referenceType.IsClass || referenceType.IsAbstract)
             {
-                Log.Error("Reference type is not a non-abstract class type.");
+                Debug.LogError("Reference type is not a non-abstract class type.");
             }
 
             if (!typeof(IReference).IsAssignableFrom(referenceType))
             {
-                Log.Error("Reference type '{referenceType.FullName}' is invalid.");
+                Debug.LogError("Reference type '{referenceType.FullName}' is invalid.");
             }
         }
 
@@ -206,7 +207,7 @@ namespace ET
         {
             if (referenceType == null)
             {
-                Log.Error("ReferenceType is invalid.");
+                Debug.LogError("ReferenceType is invalid.");
             }
 
             ReferenceCollection referenceCollection = null;
