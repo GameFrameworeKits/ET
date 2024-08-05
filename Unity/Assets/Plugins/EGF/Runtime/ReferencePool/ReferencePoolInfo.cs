@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace GFUI
+namespace EGF
 {
     /// <summary>
     /// 引用池信息。

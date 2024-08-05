@@ -9,13 +9,20 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GFUI
+namespace EGF
 {
+    
+    /// <summary>
+    /// 对应类型的引用池
+    /// </summary>
     public static partial class ReferencePool
     {
         private sealed class ReferenceCollection
         {
             private readonly Queue<IReference> m_References;
+            /// <summary>
+            /// 该引用池持有对象的类型
+            /// </summary>
             private readonly Type m_ReferenceType;
             private int m_UsingReferenceCount;
             private int m_AcquireReferenceCount;
@@ -41,7 +48,10 @@ namespace GFUI
                     return m_ReferenceType;
                 }
             }
-
+            
+            /// <summary>
+            /// 目前池子可用的数量（剩余可被取出的数量）
+            /// </summary>
             public int UnusedReferenceCount
             {
                 get
@@ -50,6 +60,9 @@ namespace GFUI
                 }
             }
 
+            /// <summary>
+            /// 被取出未归还的数量
+            /// </summary>
             public int UsingReferenceCount
             {
                 get
@@ -58,6 +71,9 @@ namespace GFUI
                 }
             }
 
+            /// <summary>
+            /// 请求获取的次数
+            /// </summary>
             public int AcquireReferenceCount
             {
                 get
@@ -66,6 +82,9 @@ namespace GFUI
                 }
             }
 
+            /// <summary>
+            /// 释放的次数
+            /// </summary>
             public int ReleaseReferenceCount
             {
                 get
@@ -74,6 +93,9 @@ namespace GFUI
                 }
             }
 
+            /// <summary>
+            /// 实际实例化次数
+            /// </summary>
             public int AddReferenceCount
             {
                 get
@@ -82,6 +104,9 @@ namespace GFUI
                 }
             }
 
+            /// <summary>
+            /// 主动移除次数
+            /// </summary>
             public int RemoveReferenceCount
             {
                 get
@@ -90,6 +115,9 @@ namespace GFUI
                 }
             }
 
+            /// <summary>
+            /// 获取池子中的一个对象，若当前池子中存在可用对象，则直接从队列取出，若当前池子没有可用对象则会通过反射创建新对象并返回（注意这里新创建的对象是不会直接放进池子中的，只有当用户把他放回池子的时候才会加入储存队列中）
+            /// </summary>
             public T Acquire<T>() where T : class, IReference, new()
             {
                 if (typeof(T) != m_ReferenceType)

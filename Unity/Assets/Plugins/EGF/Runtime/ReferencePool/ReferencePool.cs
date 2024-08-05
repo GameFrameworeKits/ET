@@ -9,13 +9,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GFUI
+namespace EGF
 {
     /// <summary>
-    /// 引用池。
+    /// 引用池，一般用来储存普通的C#类型对象。（负责管理所有类型的引用池，也是外部访问引用池的入口）
     /// </summary>
     public static partial class ReferencePool
     {
+        /// <summary>
+        /// 用于储存所有引用池实例
+        /// </summary>
         private static readonly Dictionary<Type, ReferenceCollection> s_ReferenceCollections = new Dictionary<Type, ReferenceCollection>();
         private static bool m_EnableStrictCheck = false;
 
@@ -203,6 +206,10 @@ namespace GFUI
             }
         }
 
+        /// <summary>
+        /// 获取某个类型的引用池实例(不存在该类型,则构造一个，为惰性初始化)
+        /// </summary>
+        /// <param name="referenceType">引用类型。</param>
         private static ReferenceCollection GetReferenceCollection(Type referenceType)
         {
             if (referenceType == null)
