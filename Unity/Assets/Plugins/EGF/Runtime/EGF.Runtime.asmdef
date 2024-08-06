@@ -2,6 +2,7 @@
     "name": "EGF.Runtime",
     "rootNamespace": "",
     "references": [
+        "Unity.Core",
         "UniTask",
         "YooAsset",
         "YooAsset.Editor"
