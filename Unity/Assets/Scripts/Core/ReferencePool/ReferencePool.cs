@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EGF
+namespace ET
 {
     /// <summary>
     /// 引用池，一般用来储存普通的C#类型对象。（负责管理所有类型的引用池，也是外部访问引用池的入口）

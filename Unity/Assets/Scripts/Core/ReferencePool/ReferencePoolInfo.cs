@@ -8,7 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace EGF
+namespace ET
 {
     /// <summary>
     /// 引用池信息。

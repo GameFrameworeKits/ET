@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using YooAsset;
+using ET;
 
 namespace EGF
 {
