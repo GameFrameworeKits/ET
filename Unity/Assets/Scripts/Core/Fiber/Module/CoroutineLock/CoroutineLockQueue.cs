@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -21,7 +22,7 @@ namespace ET
             self.isStart = false;
         }
         
-        public static async ETTask<CoroutineLock> Wait(this CoroutineLockQueue self, int time)
+        public static async UniTask<CoroutineLock> Wait(this CoroutineLockQueue self, int time)
         {
             CoroutineLock coroutineLock = null;
             if (!self.isStart)

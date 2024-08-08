@@ -1,11 +1,12 @@
 ﻿using Unity.Mathematics;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
     [Event(SceneType.Map)]
     public class ChangePosition_NotifyAOI: AEvent<Scene, ChangePosition>
     {
-        protected override async ETTask Run(Scene scene, ChangePosition args)
+        protected override async UniTask Run(Scene scene, ChangePosition args)
         {
             Unit unit = args.Unit;
             float3 oldPos = args.OldPos;
@@ -25,7 +26,7 @@ namespace ET.Server
             }
 
             unit.Scene().GetComponent<AOIManagerComponent>().Move(aoiEntity, newCellX, newCellY);
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

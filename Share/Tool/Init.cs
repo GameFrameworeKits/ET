@@ -30,7 +30,6 @@ namespace ET.Server
                 // 强制调用一下mongo，避免mongo库被裁剪
                 MongoHelper.ToJson(1);
                 
-                ETTask.ExceptionHandler += Log.Error;
                 
                 Log.Info($"server start........................ ");
 				

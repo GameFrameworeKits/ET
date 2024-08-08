@@ -1,12 +1,13 @@
 ﻿using System;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
     [UIEvent(UIType.UILogin)]
     public class UILoginEvent: AUIEvent
     {
-        public override async ETTask<UI> OnCreate(UIComponent uiComponent, UILayer uiLayer)
+        public override async UniTask<UI> OnCreate(UIComponent uiComponent, UILayer uiLayer)
         {
             string assetsName = $"Assets/Bundles/UI/Demo/{UIType.UILogin}.prefab";
             GameObject bundleGameObject = await uiComponent.Scene().GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);

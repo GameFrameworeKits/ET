@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using CommandLine;
 
 namespace ET.Server
@@ -7,7 +7,7 @@ namespace ET.Server
     [ConsoleHandler(ConsoleMode.CreateRobot)]
     public class CreateRobotConsoleHandler: IConsoleHandler
     {
-        public async ETTask Run(Fiber fiber, ModeContex contex, string content)
+        public async UniTask Run(Fiber fiber, ModeContex contex, string content)
         {
             switch (content)
             {
@@ -38,7 +38,7 @@ namespace ET.Server
                 }
             }
             contex.Parent.RemoveComponent<ModeContex>();
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

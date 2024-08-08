@@ -1,12 +1,11 @@
-﻿using System;
-
+﻿using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
     [MessageSessionHandler(SceneType.Gate)]
     public class C2G_LoginGateHandler : MessageSessionHandler<C2G_LoginGate, G2C_LoginGate>
     {
-        protected override async ETTask Run(Session session, C2G_LoginGate request, G2C_LoginGate response)
+        protected override async UniTask Run(Session session, C2G_LoginGate request, G2C_LoginGate response)
         {
             Scene root = session.Root();
             string account = root.GetComponent<GateSessionKeyComponent>().Get(request.Key);
@@ -41,7 +40,7 @@ namespace ET.Server
                 PlayerRoomComponent playerRoomComponent = player.GetComponent<PlayerRoomComponent>();
                 if (playerRoomComponent.RoomActorId != default)
                 {
-                    CheckRoom(player, session).Coroutine();
+                    CheckRoom(player, session).Forget();
                 }
                 else
                 {
@@ -51,10 +50,10 @@ namespace ET.Server
             }
 
             response.PlayerId = player.Id;
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
 
-        private static async ETTask CheckRoom(Player player, Session session)
+        private static async UniTask CheckRoom(Player player, Session session)
         {
             Fiber fiber = player.Fiber();
             await fiber.WaitFrameFinish();

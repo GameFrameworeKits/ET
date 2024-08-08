@@ -1,9 +1,11 @@
-﻿namespace ET
+﻿using Cysharp.Threading.Tasks;
+
+namespace ET
 {
     [Invoke((long)SceneType.Main)]
-    public class FiberInit_Main: AInvokeHandler<FiberInit, ETTask>
+    public class FiberInit_Main: AInvokeHandler<FiberInit, UniTask>
     {
-        public override async ETTask Handle(FiberInit fiberInit)
+        public override async UniTask Handle(FiberInit fiberInit)
         {
             Scene root = fiberInit.Fiber.Root;
            

@@ -6,9 +6,9 @@
 
         public const string LSEntityType = "ET.LSEntity";
         
-        public const string ETTask = "ETTask";
+        public const string ETTask = "UniTask";
 
-        public const string ETTaskFullName = "ET.ETTask";
+        public const string ETTaskFullName = "Cysharp.Threading.Tasks.UniTask";
 
         public static readonly string[] AddChildMethods = { "AddChild", "AddChildWithId" };
 

@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
@@ -7,7 +6,7 @@ namespace ET.Server
     [FriendOf(typeof(MatchComponent))]
     public static partial class MatchComponentSystem
     {
-        public static async ETTask Match(this MatchComponent self, long playerId)
+        public static async UniTask Match(this MatchComponent self, long playerId)
         {
             if (self.waitMatchPlayers.Contains(playerId))
             {

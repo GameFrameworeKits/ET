@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -83,7 +84,7 @@ namespace ET
             }
         }
         
-        public async ETTask PublishAsync<S, T>(S scene, T a) where S: class, IScene where T : struct
+        public async UniTask PublishAsync<S, T>(S scene, T a) where S: class, IScene where T : struct
         {
             List<EventInfo> iEvents;
             if (!this.allEvents.TryGetValue(typeof(T), out iEvents))
@@ -91,7 +92,7 @@ namespace ET
                 return;
             }
 
-            using ListComponent<ETTask> list = ListComponent<ETTask>.Create();
+            using ListComponent<UniTask> list = ListComponent<UniTask>.Create();
             
             foreach (EventInfo eventInfo in iEvents)
             {
@@ -111,7 +112,7 @@ namespace ET
 
             try
             {
-                await ETTaskHelper.WaitAll(list);
+                await UniTask.WhenAll(list);
             }
             catch (Exception e)
             {
@@ -142,7 +143,7 @@ namespace ET
                     continue;
                 }
                 
-                aEvent.Handle(scene, a).Coroutine();
+                aEvent.Handle(scene, a).Forget();
             }
         }
         

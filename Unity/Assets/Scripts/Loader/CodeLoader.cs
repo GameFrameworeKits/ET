@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using HybridCLR;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -21,7 +22,7 @@ namespace ET
             this.enableDll = Resources.Load<GlobalConfig>("GlobalConfig").EnableDll;
         }
 
-        public async ETTask DownloadAsync()
+        public async UniTask DownloadAsync()
         {
             if (!Define.IsEditor)
             {

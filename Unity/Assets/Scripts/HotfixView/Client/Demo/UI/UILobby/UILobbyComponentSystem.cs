@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
@@ -13,10 +14,10 @@ namespace ET.Client
             ReferenceCollector rc = self.GetParent<UI>().GameObject.GetComponent<ReferenceCollector>();
 
             self.enterMap = rc.Get<GameObject>("EnterMap");
-            self.enterMap.GetComponent<Button>().onClick.AddListener(() => { self.EnterMap().Coroutine(); });
+            self.enterMap.GetComponent<Button>().onClick.AddListener(() => { self.EnterMap().Forget(); });
         }
         
-        public static async ETTask EnterMap(this UILobbyComponent self)
+        public static async UniTask EnterMap(this UILobbyComponent self)
         {
             Scene root = self.Root();
             await EnterMapHelper.EnterMapAsync(root);

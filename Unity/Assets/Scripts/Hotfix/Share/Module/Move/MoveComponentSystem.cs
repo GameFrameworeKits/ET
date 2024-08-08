@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Unity.Mathematics;
 
 namespace ET
@@ -73,12 +74,12 @@ namespace ET
             {
                 path.Add(self.Targets[i]);
             }
-            self.MoveToAsync(path, speed).Coroutine();
+            self.MoveToAsync(path, speed).Forget();
             return true;
         }
 
         // 该方法不需要用cancelToken的方式取消，因为即使不传入cancelToken，多次调用该方法也要取消之前的移动协程,上层可以stop取消
-        public static async ETTask<bool> MoveToAsync(this MoveComponent self, List<float3> target, float speed, int turnTime = 100)
+        public static async UniTask<bool> MoveToAsync(this MoveComponent self, List<float3> target, float speed, int turnTime = 100)
         {
             self.Stop(false);
 
@@ -90,13 +91,13 @@ namespace ET
             self.IsTurnHorizontal = true;
             self.TurnTime = turnTime;
             self.Speed = speed;
-            self.tcs = ETTask<bool>.Create(true);
+            self.tcs = AutoResetUniTaskCompletionSource<bool>.Create();
 
             EventSystem.Instance.Publish(self.Scene(), new MoveStart() {Unit = self.GetParent<Unit>()});
             
             self.StartMove();
             
-            bool moveRet = await self.tcs;
+            bool moveRet = await self.tcs.Task;
 
             if (moveRet)
             {
@@ -287,7 +288,7 @@ namespace ET
             {
                 var tcs = self.tcs;
                 self.tcs = null;
-                tcs.SetResult(ret);
+                tcs.TrySetResult(ret);
             }
         }
     }

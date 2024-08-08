@@ -1,4 +1,6 @@
-﻿namespace ET.Server
+﻿using Cysharp.Threading.Tasks;
+
+namespace ET.Server
 {
     [FriendOf(typeof(GateSessionKeyComponent))]
     public static partial class GateSessionKeyComponentSystem
@@ -6,7 +8,7 @@
         public static void Add(this GateSessionKeyComponent self, long key, string account)
         {
             self.sessionKey.Add(key, account);
-            self.TimeoutRemoveKey(key).Coroutine();
+            self.TimeoutRemoveKey(key).Forget();
         }
 
         public static string Get(this GateSessionKeyComponent self, long key)
@@ -21,7 +23,7 @@
             self.sessionKey.Remove(key);
         }
 
-        private static async ETTask TimeoutRemoveKey(this GateSessionKeyComponent self, long key)
+        private static async UniTask TimeoutRemoveKey(this GateSessionKeyComponent self, long key)
         {
             await self.Root().GetComponent<TimerComponent>().WaitAsync(20000);
             self.sessionKey.Remove(key);

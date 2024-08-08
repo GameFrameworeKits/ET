@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
@@ -15,10 +15,10 @@ namespace ET.Client
         [EntitySystem]
         private static void Destroy(this ClientSenderComponent self)
         {
-            self.RemoveFiberAsync().Coroutine();
+            self.RemoveFiberAsync().Forget();
         }
 
-        private static async ETTask RemoveFiberAsync(this ClientSenderComponent self)
+        private static async UniTask RemoveFiberAsync(this ClientSenderComponent self)
         {
             if (self.fiberId == 0)
             {
@@ -30,13 +30,13 @@ namespace ET.Client
             await FiberManager.Instance.Remove(fiberId);
         }
 
-        public static async ETTask DisposeAsync(this ClientSenderComponent self)
+        public static async UniTask DisposeAsync(this ClientSenderComponent self)
         {
             await self.RemoveFiberAsync();
             self.Dispose();
         }
 
-        public static async ETTask<long> LoginAsync(this ClientSenderComponent self, string account, string password)
+        public static async UniTask<long> LoginAsync(this ClientSenderComponent self, string account, string password)
         {
             self.fiberId = await FiberManager.Instance.Create(SchedulerType.ThreadPool, 0, SceneType.NetClient, "");
             self.netClientActorId = new ActorId(self.Fiber().Process, self.fiberId);
@@ -56,7 +56,7 @@ namespace ET.Client
             self.Root().GetComponent<ProcessInnerSender>().Send(self.netClientActorId, a2NetClientMessage);
         }
 
-        public static async ETTask<IResponse> Call(this ClientSenderComponent self, IRequest request, bool needException = true)
+        public static async UniTask<IResponse> Call(this ClientSenderComponent self, IRequest request, bool needException = true)
         {
             A2NetClient_Request a2NetClientRequest = A2NetClient_Request.Create();
             a2NetClientRequest.MessageObject = request;

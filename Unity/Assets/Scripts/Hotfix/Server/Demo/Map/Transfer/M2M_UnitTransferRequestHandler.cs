@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
 using Unity.Mathematics;
 
 namespace ET.Server
@@ -6,7 +6,7 @@ namespace ET.Server
     [MessageHandler(SceneType.Map)]
     public class M2M_UnitTransferRequestHandler: MessageHandler<Scene, M2M_UnitTransferRequest, M2M_UnitTransferResponse>
     {
-        protected override async ETTask Run(Scene scene, M2M_UnitTransferRequest request, M2M_UnitTransferResponse response)
+        protected override async UniTask Run(Scene scene, M2M_UnitTransferRequest request, M2M_UnitTransferResponse response)
         {
             UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
             Unit unit = MongoHelper.Deserialize<Unit>(request.Unit);

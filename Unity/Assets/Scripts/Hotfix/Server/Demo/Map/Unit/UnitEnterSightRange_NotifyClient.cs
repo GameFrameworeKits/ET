@@ -1,10 +1,12 @@
-﻿namespace ET.Server
+﻿using Cysharp.Threading.Tasks;
+
+namespace ET.Server
 {
     // 进入视野通知
     [Event(SceneType.Map)]
     public class UnitEnterSightRange_NotifyClient: AEvent<Scene, UnitEnterSightRange>
     {
-        protected override async ETTask Run(Scene scene, UnitEnterSightRange args)
+        protected override async UniTask Run(Scene scene, UnitEnterSightRange args)
         {
             AOIEntity a = args.A;
             AOIEntity b = args.B;
@@ -23,7 +25,7 @@
 
             MapMessageHelper.NoticeUnitAdd(ua, ub);
             
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

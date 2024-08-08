@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Cysharp.Threading.Tasks;
 using MongoDB.Driver;
 
 namespace ET.Server
@@ -28,7 +29,7 @@ namespace ET.Server
 	    
 	    #region Query
 
-	    public static async ETTask<T> Query<T>(this DBComponent self, long id, string collection = null) where T : Entity
+	    public static async UniTask<T> Query<T>(this DBComponent self, long id, string collection = null) where T : Entity
 	    {
 		    using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.DB, id % DBComponent.TaskCount))
 		    {
@@ -38,7 +39,7 @@ namespace ET.Server
 		    }
 	    }
 	    
-	    public static async ETTask<List<T>> Query<T>(this DBComponent self, Expression<Func<T, bool>> filter, string collection = null)
+	    public static async UniTask<List<T>> Query<T>(this DBComponent self, Expression<Func<T, bool>> filter, string collection = null)
 			    where T : Entity
 	    {
 		    using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.DB, RandomGenerator.RandInt64() % DBComponent.TaskCount))
@@ -49,7 +50,7 @@ namespace ET.Server
 		    }
 	    }
 
-	    public static async ETTask<List<T>> Query<T>(this DBComponent self, long taskId, Expression<Func<T, bool>> filter, string collection = null)
+	    public static async UniTask<List<T>> Query<T>(this DBComponent self, long taskId, Expression<Func<T, bool>> filter, string collection = null)
 			    where T : Entity
 	    {
 		    using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.DB, taskId % DBComponent.TaskCount))
@@ -60,7 +61,7 @@ namespace ET.Server
 		    }
 	    }
 	    
-	    public static async ETTask Query(this DBComponent self, long id, List<string> collectionNames, List<Entity> result)
+	    public static async UniTask Query(this DBComponent self, long id, List<string> collectionNames, List<Entity> result)
 	    {
 		    if (collectionNames == null || collectionNames.Count == 0)
 		    {
@@ -85,7 +86,7 @@ namespace ET.Server
 		    }
 	    }
 
-	    public static async ETTask<List<T>> QueryJson<T>(this DBComponent self, string json, string collection = null) where T : Entity
+	    public static async UniTask<List<T>> QueryJson<T>(this DBComponent self, string json, string collection = null) where T : Entity
 	    {
 		    using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.DB, RandomGenerator.RandInt64() % DBComponent.TaskCount))
 		    {
@@ -95,7 +96,7 @@ namespace ET.Server
 		    }
 	    }
 
-	    public static async ETTask<List<T>> QueryJson<T>(this DBComponent self, long taskId, string json, string collection = null) where T : Entity
+	    public static async UniTask<List<T>> QueryJson<T>(this DBComponent self, long taskId, string json, string collection = null) where T : Entity
 	    {
 		    using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.DB, RandomGenerator.RandInt64() % DBComponent.TaskCount))
 		    {
@@ -109,7 +110,7 @@ namespace ET.Server
 
 	    #region Insert
 
-	    public static async ETTask InsertBatch<T>(this DBComponent self, IEnumerable<T> list, string collection = null) where T: Entity
+	    public static async UniTask InsertBatch<T>(this DBComponent self, IEnumerable<T> list, string collection = null) where T: Entity
 	    {
 		    if (collection == null)
 		    {
@@ -126,7 +127,7 @@ namespace ET.Server
 
 	    #region Save
 
-	    public static async ETTask Save<T>(this DBComponent self, T entity, string collection = null) where T : Entity
+	    public static async UniTask Save<T>(this DBComponent self, T entity, string collection = null) where T : Entity
 	    {
 		    if (entity == null)
 		    {
@@ -146,7 +147,7 @@ namespace ET.Server
 		    }
 	    }
 
-	    public static async ETTask Save<T>(this DBComponent self, long taskId, T entity, string collection = null) where T : Entity
+	    public static async UniTask Save<T>(this DBComponent self, long taskId, T entity, string collection = null) where T : Entity
 	    {
 		    if (entity == null)
 		    {
@@ -166,7 +167,7 @@ namespace ET.Server
 		    }
 	    }
 
-	    public static async ETTask Save(this DBComponent self, long id, List<Entity> entities)
+	    public static async UniTask Save(this DBComponent self, long id, List<Entity> entities)
 	    {
 		    if (entities == null)
 		    {
@@ -189,7 +190,7 @@ namespace ET.Server
 		    }
 	    }
 
-	    public static async ETTask SaveNotWait<T>(this DBComponent self, T entity, long taskId = 0, string collection = null) where T : Entity
+	    public static async UniTask SaveNotWait<T>(this DBComponent self, T entity, long taskId = 0, string collection = null) where T : Entity
 	    {
 		    if (taskId == 0)
 		    {
@@ -205,7 +206,7 @@ namespace ET.Server
 
 	    #region Remove
 	    
-	    public static async ETTask<long> Remove<T>(this DBComponent self, long id, string collection = null) where T : Entity
+	    public static async UniTask<long> Remove<T>(this DBComponent self, long id, string collection = null) where T : Entity
 	    {
 		    using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.DB, id % DBComponent.TaskCount))
 		    {
@@ -215,7 +216,7 @@ namespace ET.Server
 		    }
 	    }
 
-	    public static async ETTask<long> Remove<T>(this DBComponent self, long taskId, long id, string collection = null) where T : Entity
+	    public static async UniTask<long> Remove<T>(this DBComponent self, long taskId, long id, string collection = null) where T : Entity
 	    {
 		    using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.DB, taskId % DBComponent.TaskCount))
 		    {
@@ -225,7 +226,7 @@ namespace ET.Server
 		    }
 	    }
 
-	    public static async ETTask<long> Remove<T>(this DBComponent self, Expression<Func<T, bool>> filter, string collection = null) where T : Entity
+	    public static async UniTask<long> Remove<T>(this DBComponent self, Expression<Func<T, bool>> filter, string collection = null) where T : Entity
 	    {
 		    using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.DB, RandomGenerator.RandInt64() % DBComponent.TaskCount))
 		    {
@@ -235,7 +236,7 @@ namespace ET.Server
 		    }
 	    }
 
-	    public static async ETTask<long> Remove<T>(this DBComponent self, long taskId, Expression<Func<T, bool>> filter, string collection = null)
+	    public static async UniTask<long> Remove<T>(this DBComponent self, long taskId, Expression<Func<T, bool>> filter, string collection = null)
 			    where T : Entity
 	    {
 		    using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.DB, taskId % DBComponent.TaskCount))

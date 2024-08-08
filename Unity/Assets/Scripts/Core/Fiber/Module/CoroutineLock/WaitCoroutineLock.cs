@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -21,11 +22,11 @@ namespace ET
         public static WaitCoroutineLock Create()
         {
             WaitCoroutineLock waitCoroutineLock = new WaitCoroutineLock();
-            waitCoroutineLock.tcs = ETTask<CoroutineLock>.Create(true);
+            waitCoroutineLock.tcs = AutoResetUniTaskCompletionSource<CoroutineLock>.Create();
             return waitCoroutineLock;
         }
         
-        private ETTask<CoroutineLock> tcs;
+        private AutoResetUniTaskCompletionSource<CoroutineLock> tcs;
 
         public void SetResult(CoroutineLock coroutineLock)
         {
@@ -35,7 +36,7 @@ namespace ET
             }
             var t = this.tcs;
             this.tcs = null;
-            t.SetResult(coroutineLock);
+            t.TrySetResult(coroutineLock);
         }
 
         public void SetException(Exception exception)
@@ -46,7 +47,7 @@ namespace ET
             }
             var t = this.tcs;
             this.tcs = null;
-            t.SetException(exception);
+            t.TrySetException(exception);
         }
 
         public bool IsDisposed()
@@ -54,9 +55,9 @@ namespace ET
             return this.tcs == null;
         }
 
-        public async ETTask<CoroutineLock> Wait()
+        public async UniTask<CoroutineLock> Wait()
         {
-            return await this.tcs;
+            return await this.tcs.Task;
         }
     }
 }

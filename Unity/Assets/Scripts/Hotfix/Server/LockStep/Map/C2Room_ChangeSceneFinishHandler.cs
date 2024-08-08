@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TrueSync;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
@@ -7,7 +8,7 @@ namespace ET.Server
     [FriendOf(typeof (RoomServerComponent))]
     public class C2Room_ChangeSceneFinishHandler: MessageHandler<Scene, C2Room_ChangeSceneFinish>
     {
-        protected override async ETTask Run(Scene root, C2Room_ChangeSceneFinish message)
+        protected override async UniTask Run(Scene root, C2Room_ChangeSceneFinish message)
         {
             Room room = root.GetComponent<Room>();
             RoomServerComponent roomServerComponent = room.GetComponent<RoomServerComponent>();

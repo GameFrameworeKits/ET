@@ -1,4 +1,5 @@
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
@@ -29,12 +30,12 @@ namespace ET.Client
             
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                self.Test1().Coroutine();
+                self.Test1().Forget();
             }
                 
             if (Input.GetKeyDown(KeyCode.W))
             {
-                self.Test2().Coroutine();
+                self.Test2().Forget();
             }
 
             if (Input.GetKeyDown(KeyCode.R))
@@ -46,11 +47,11 @@ namespace ET.Client
             if (Input.GetKeyDown(KeyCode.T))
             {
                 C2M_TransferMap c2MTransferMap = C2M_TransferMap.Create();
-                self.Root().GetComponent<ClientSenderComponent>().Call(c2MTransferMap).Coroutine();
+                self.Root().GetComponent<ClientSenderComponent>().Call(c2MTransferMap).Forget();
             }
         }
         
-        private static async ETTask Test1(this OperaComponent self)
+        private static async UniTaskVoid Test1(this OperaComponent self)
         {
             Log.Debug($"Croutine 1 start1 ");
             using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(1, 20000, 3000))
@@ -61,7 +62,7 @@ namespace ET.Client
             Log.Debug($"Croutine 1 end1");
         }
             
-        private static async ETTask Test2(this OperaComponent self)
+        private static async UniTaskVoid Test2(this OperaComponent self)
         {
             Log.Debug($"Croutine 2 start2");
             using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(1, 20000, 3000))

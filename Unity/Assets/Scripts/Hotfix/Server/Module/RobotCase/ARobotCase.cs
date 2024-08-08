@@ -1,11 +1,13 @@
+using Cysharp.Threading.Tasks;
+
 namespace ET.Server
 {
     // 这里为什么能定义class呢？因为这里只有逻辑，热重载后新的handler替换旧的，仍然没有问题
-    public abstract class ARobotCase: AInvokeHandler<RobotInvokeArgs, ETTask>
+    public abstract class ARobotCase: AInvokeHandler<RobotInvokeArgs, UniTask>
     {
-        protected abstract ETTask Run(RobotCase robotCase);
+        protected abstract UniTask Run(RobotCase robotCase);
 
-        public override async ETTask Handle(RobotInvokeArgs a)
+        public override async UniTask Handle(RobotInvokeArgs a)
         {
             using RobotCase robotCase = await a.Fiber.Root.GetComponent<RobotCaseComponent>().New();
             try

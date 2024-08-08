@@ -1,13 +1,11 @@
-﻿using System;
-using System.Net;
-
+﻿using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
 	[MessageSessionHandler(SceneType.Realm)]
 	public class C2R_LoginHandler : MessageSessionHandler<C2R_Login, R2C_Login>
 	{
-		protected override async ETTask Run(Session session, C2R_Login request, R2C_Login response)
+		protected override async UniTask Run(Session session, C2R_Login request, R2C_Login response)
 		{
 			// 随机分配一个Gate
 			StartSceneConfig config = RealmGateAddressHelper.GetGate(session.Zone(), request.Account);
@@ -23,10 +21,10 @@ namespace ET.Server
 			response.Key = g2RGetLoginKey.Key;
 			response.GateId = g2RGetLoginKey.GateId;
 			
-			CloseSession(session).Coroutine();
+			CloseSession(session).Forget();
 		}
 
-		private async ETTask CloseSession(Session session)
+		private async UniTask CloseSession(Session session)
 		{
 			await session.Root().GetComponent<TimerComponent>().WaitAsync(1000);
 			session.Dispose();

@@ -1,17 +1,18 @@
 ﻿using System.Net;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
     [Invoke((long)SceneType.RouterManager)]
-    public class FiberInit_RouterManager: AInvokeHandler<FiberInit, ETTask>
+    public class FiberInit_RouterManager: AInvokeHandler<FiberInit, UniTask>
     {
-        public override async ETTask Handle(FiberInit fiberInit)
+        public override async UniTask Handle(FiberInit fiberInit)
         {
             Scene root = fiberInit.Fiber.Root;
             StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get((int)root.Id);
             root.AddComponent<HttpComponent, string>($"http://*:{startSceneConfig.Port}/");
 
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

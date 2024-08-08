@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace ET.Client
 {
     [Event(SceneType.Current)]
     public class ChangePosition_SyncGameObjectPos: AEvent<Scene, ChangePosition>
     {
-        protected override async ETTask Run(Scene scene, ChangePosition args)
+        protected override async UniTask Run(Scene scene, ChangePosition args)
         {
             Unit unit = args.Unit;
             GameObjectComponent gameObjectComponent = unit.GetComponent<GameObjectComponent>();
@@ -16,7 +17,7 @@ namespace ET.Client
 
             Transform transform = gameObjectComponent.Transform;
             transform.position = unit.Position;
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -10,7 +10,7 @@ namespace ET
         
         public Type RequestType { get; }
         
-        private readonly ETTask<IResponse> tcs;
+        private readonly AutoResetUniTaskCompletionSource<IResponse> tcs;
 
         public bool NeedException { get; }
         
@@ -20,23 +20,23 @@ namespace ET
             
             this.RequestType = requestType;
             
-            this.tcs = ETTask<IResponse>.Create(true);
+            this.tcs = AutoResetUniTaskCompletionSource<IResponse>.Create();
             this.NeedException = needException;
         }
         
         public void SetResult(IResponse response)
         {
-            this.tcs.SetResult(response);
+            this.tcs.TrySetResult(response);
         }
         
         public void SetException(Exception exception)
         {
-            this.tcs.SetException(exception);
+            this.tcs.TrySetException(exception);
         }
 
-        public async ETTask<IResponse> Wait()
+        public async UniTask<IResponse> Wait()
         {
-            return await this.tcs;
+            return await this.tcs.Task;
         }
     }
 }

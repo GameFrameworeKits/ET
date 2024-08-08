@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
 	[MessageLocationHandler(SceneType.Map)]
 	public class C2M_TransferMapHandler : MessageLocationHandler<Unit, C2M_TransferMap, M2C_TransferMap>
 	{
-		protected override async ETTask Run(Unit unit, C2M_TransferMap request, M2C_TransferMap response)
+		protected override async UniTask Run(Unit unit, C2M_TransferMap request, M2C_TransferMap response)
 		{
-			await ETTask.CompletedTask;
+			await UniTask.CompletedTask;
 
 			string currentMap = unit.Scene().Name;
 			string toMap = null;
@@ -22,7 +22,7 @@ namespace ET.Server
 
 			StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.GetBySceneName(unit.Fiber().Zone, toMap);
 			
-			TransferHelper.TransferAtFrameFinish(unit, startSceneConfig.ActorId, toMap).Coroutine();
+			TransferHelper.TransferAtFrameFinish(unit, startSceneConfig.ActorId, toMap).Forget();
 		}
 	}
 }

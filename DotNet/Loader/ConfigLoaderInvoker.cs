@@ -2,13 +2,14 @@ using Luban;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
     [Invoke]
-    public class GetAllConfigBytes: AInvokeHandler<ConfigLoader.GetAllConfigBytes, ETTask<Dictionary<Type, ByteBuf>>>
+    public class GetAllConfigBytes: AInvokeHandler<ConfigLoader.GetAllConfigBytes, UniTask<Dictionary<Type, ByteBuf>>>
     {
-        public override async ETTask<Dictionary<Type, ByteBuf>> Handle(ConfigLoader.GetAllConfigBytes args)
+        public override async UniTask<Dictionary<Type, ByteBuf>> Handle(ConfigLoader.GetAllConfigBytes args)
         {
             Dictionary<Type, ByteBuf> output = new Dictionary<Type, ByteBuf>();
             List<string> startConfigs = new List<string>()
@@ -33,7 +34,7 @@ namespace ET
                 output[configType] = new ByteBuf(File.ReadAllBytes(configFilePath));
             }
 
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
             return output;
         }
     }

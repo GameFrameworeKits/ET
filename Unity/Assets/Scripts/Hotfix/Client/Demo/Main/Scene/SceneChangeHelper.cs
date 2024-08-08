@@ -1,9 +1,11 @@
-﻿namespace ET.Client
+﻿using Cysharp.Threading.Tasks;
+
+namespace ET.Client
 {
     public static partial class SceneChangeHelper
     {
         // 场景切换协程
-        public static async ETTask SceneChangeTo(Scene root, string sceneName, long sceneInstanceId)
+        public static async UniTask SceneChangeTo(Scene root, string sceneName, long sceneInstanceId)
         {
             root.RemoveComponent<AIComponent>();
             

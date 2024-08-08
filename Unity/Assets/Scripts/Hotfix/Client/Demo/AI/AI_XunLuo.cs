@@ -1,4 +1,6 @@
 using Unity.Mathematics;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
@@ -14,7 +16,7 @@ namespace ET.Client
             return 1;
         }
 
-        public override async ETTask Execute(AIComponent aiComponent, AIConfig aiConfig, ETCancellationToken cancellationToken)
+        public override async UniTask Execute(AIComponent aiComponent, AIConfig aiConfig, CancellationToken cancellationToken)
         {
             Scene root = aiComponent.Root();
 
@@ -31,10 +33,6 @@ namespace ET.Client
                 XunLuoPathComponent xunLuoPathComponent = myUnit.GetComponent<XunLuoPathComponent>();
                 float3 nextTarget = xunLuoPathComponent.GetCurrent();
                 await myUnit.MoveToAsync(nextTarget, cancellationToken);
-                if (cancellationToken.IsCancel())
-                {
-                    return;
-                }
                 xunLuoPathComponent.MoveNext();
             }
         }

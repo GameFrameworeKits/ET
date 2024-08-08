@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -49,7 +49,7 @@ namespace ET
         public ThreadSynchronizationContext ThreadSynchronizationContext { get; }
         public ILog Log { get; }
 
-        private readonly Queue<ETTask> frameFinishTasks = new();
+        private readonly Queue<AutoResetUniTaskCompletionSource> frameFinishTasks = new();
         
         internal Fiber(int id, int zone, SceneType sceneType, string name)
         {
@@ -93,19 +93,19 @@ namespace ET
             }
         }
 
-        public async ETTask WaitFrameFinish()
+        public async UniTask WaitFrameFinish()
         {
-            ETTask task = ETTask.Create(true);
+            AutoResetUniTaskCompletionSource task = AutoResetUniTaskCompletionSource.Create();
             this.frameFinishTasks.Enqueue(task);
-            await task;
+            await task.Task;
         }
 
         private void FrameFinishUpdate()
         {
             while (this.frameFinishTasks.Count > 0)
             {
-                ETTask task = this.frameFinishTasks.Dequeue();
-                task.SetResult();
+                AutoResetUniTaskCompletionSource task = this.frameFinishTasks.Dequeue();
+                task.TrySetResult();
             }
         }
 

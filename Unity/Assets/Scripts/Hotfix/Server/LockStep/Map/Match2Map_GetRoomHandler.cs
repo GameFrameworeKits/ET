@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
 	[MessageHandler(SceneType.Map)]
 	public class Match2Map_GetRoomHandler : MessageHandler<Scene, Match2Map_GetRoom, Map2Match_GetRoom>
 	{
-		protected override async ETTask Run(Scene root, Match2Map_GetRoom request, Map2Match_GetRoom response)
+		protected override async UniTask Run(Scene root, Match2Map_GetRoom request, Map2Match_GetRoom response)
 		{
 			//RoomManagerComponent roomManagerComponent = root.GetComponent<RoomManagerComponent>();
 			
@@ -20,7 +19,7 @@ namespace ET.Server
 			await root.GetComponent<MessageSender>().Call(roomRootActorId, roomManager2RoomInit);
 			
 			response.ActorId = roomRootActorId;
-			await ETTask.CompletedTask;
+			await UniTask.CompletedTask;
 		}
 	}
 }

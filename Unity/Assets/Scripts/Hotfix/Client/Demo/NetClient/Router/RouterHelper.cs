@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Net;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
     public static partial class RouterHelper
     {
         // 注册router
-        public static async ETTask<Session> CreateRouterSession(this NetComponent netComponent, IPEndPoint address, string account, string password)
+        public static async UniTask<Session> CreateRouterSession(this NetComponent netComponent, IPEndPoint address, string account, string password)
         {
             uint localConn = (uint)(account.GetLongHashCode() ^ password.GetLongHashCode() ^ RandomGenerator.RandUInt32());
             (uint recvLocalConn, IPEndPoint routerAddress) = await GetRouterAddress(netComponent, address, localConn, 0);
@@ -25,7 +26,7 @@ namespace ET.Client
             return routerSession;
         }
         
-        public static async ETTask<(uint, IPEndPoint)> GetRouterAddress(this NetComponent netComponent, IPEndPoint address, uint localConn, uint remoteConn)
+        public static async UniTask<(uint, IPEndPoint)> GetRouterAddress(this NetComponent netComponent, IPEndPoint address, uint localConn, uint remoteConn)
         {
             Log.Info($"start get router address: {netComponent.Root().Id} {address} {localConn} {remoteConn}");
             //return (RandomHelper.RandUInt32(), address);
@@ -39,7 +40,7 @@ namespace ET.Client
         }
 
         // 向router申请
-        private static async ETTask<uint> Connect(this NetComponent netComponent, IPEndPoint routerAddress, IPEndPoint realAddress, uint localConn, uint remoteConn)
+        private static async UniTask<uint> Connect(this NetComponent netComponent, IPEndPoint routerAddress, IPEndPoint realAddress, uint localConn, uint remoteConn)
         {
             uint synFlag = remoteConn == 0? KcpProtocalType.RouterSYN : KcpProtocalType.RouterReconnectSYN;
 

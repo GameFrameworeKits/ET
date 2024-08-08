@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
@@ -7,10 +8,10 @@ namespace ET.Server
     {
         public override void Handle(NetComponentOnRead args)
         {
-            HandleAsync(args).Coroutine();
+            HandleAsync(args).Forget();
         }
 
-        private async ETTask HandleAsync(NetComponentOnRead args)
+        private async UniTaskVoid HandleAsync(NetComponentOnRead args)
         {
             Session session = args.Session;
             object message = args.Message;

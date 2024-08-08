@@ -1,9 +1,11 @@
-﻿namespace ET.Client
+﻿using Cysharp.Threading.Tasks;
+
+namespace ET.Client
 {
 	[MessageHandler(SceneType.Demo)]
 	public class M2C_RemoveUnitsHandler: MessageHandler<Scene, M2C_RemoveUnits>
 	{
-		protected override async ETTask Run(Scene root, M2C_RemoveUnits message)
+		protected override async UniTask Run(Scene root, M2C_RemoveUnits message)
 		{	
 			UnitComponent unitComponent = root.CurrentScene()?.GetComponent<UnitComponent>();
 			if (unitComponent == null)
@@ -15,7 +17,7 @@
 				unitComponent.Remove(unitId);
 			}
 
-			await ETTask.CompletedTask;
+			await UniTask.CompletedTask;
 		}
 	}
 }

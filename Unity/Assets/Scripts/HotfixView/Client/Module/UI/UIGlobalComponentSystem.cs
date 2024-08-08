@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
@@ -19,7 +20,7 @@ namespace ET.Client
             self.UILayers.Add((int)UILayer.High, referenceCollector.Get<GameObject>(UILayer.High.ToString()).transform);
         }
 
-        public static async ETTask<UI> OnCreate(this UIGlobalComponent self, UIComponent uiComponent, string uiType, UILayer uiLayer)
+        public static async UniTask<UI> OnCreate(this UIGlobalComponent self, UIComponent uiComponent, string uiType, UILayer uiLayer)
         {
             try
             {

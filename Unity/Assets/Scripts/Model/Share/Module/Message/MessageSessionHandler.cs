@@ -1,17 +1,18 @@
 using System;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
     public abstract class MessageSessionHandler<Message>: HandlerObject, IMessageSessionHandler where Message : MessageObject
     {
-        protected abstract ETTask Run(Session session, Message message);
+        protected abstract UniTask Run(Session session, Message message);
 
         public void Handle(Session session, object msg)
         {
-            HandleAsync(session, msg).Coroutine();
+            HandleAsync(session, msg).Forget();
         }
 
-        private async ETTask HandleAsync(Session session, object message)
+        private async UniTask HandleAsync(Session session, object message)
         {
             if (message == null)
             {
@@ -41,14 +42,14 @@ namespace ET
     
     public abstract class MessageSessionHandler<Request, Response>: HandlerObject, IMessageSessionHandler where Request : MessageObject, IRequest where Response : MessageObject, IResponse
     {
-        protected abstract ETTask Run(Session session, Request request, Response response);
+        protected abstract UniTask Run(Session session, Request request, Response response);
 
         public void Handle(Session session, object message)
         {
-            HandleAsync(session, message).Coroutine();
+            HandleAsync(session, message).Forget();
         }
 
-        private async ETTask HandleAsync(Session session, object message)
+        private async UniTask HandleAsync(Session session, object message)
         {
             try
             {

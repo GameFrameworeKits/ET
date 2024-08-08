@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -58,7 +59,7 @@ namespace ET
 
         public float Speed; // m/s
 
-        public ETTask<bool> tcs;
+        public AutoResetUniTaskCompletionSource<bool> tcs;
 
         public List<float3> Targets = new List<float3>();
 

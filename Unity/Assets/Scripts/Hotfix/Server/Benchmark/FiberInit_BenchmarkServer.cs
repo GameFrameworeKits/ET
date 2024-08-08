@@ -1,13 +1,12 @@
 ﻿using System.Net;
-using System.Net.Sockets;
-using ET.Client;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
     [Invoke((long)SceneType.BenchmarkServer)]
-    public class FiberInit_BenchmarkServer: AInvokeHandler<FiberInit, ETTask>
+    public class FiberInit_BenchmarkServer: AInvokeHandler<FiberInit, UniTask>
     {
-        public override async ETTask Handle(FiberInit fiberInit)
+        public override async UniTask Handle(FiberInit fiberInit)
         {
             Scene root = fiberInit.Fiber.Root;
             //root.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.UnOrderedMessage);
@@ -20,7 +19,7 @@ namespace ET.Server
             //root.AddComponent<ActorLocationSenderComponent>();
             root.AddComponent<NetComponent, IPEndPoint, NetworkProtocol>(StartSceneConfigCategory.Instance.Benchmark.OuterIPPort, NetworkProtocol.UDP);
             root.AddComponent<BenchmarkServerComponent>();
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

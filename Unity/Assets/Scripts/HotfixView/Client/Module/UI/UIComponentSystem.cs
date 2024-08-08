@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
@@ -15,7 +15,7 @@ namespace ET.Client
 			self.UIGlobalComponent = self.Root().GetComponent<UIGlobalComponent>();
 		}
 		
-		public static async ETTask<UI> Create(this UIComponent self, string uiType, UILayer uiLayer)
+		public static async UniTask<UI> Create(this UIComponent self, string uiType, UILayer uiLayer)
 		{
 			UI ui = await self.UIGlobalComponent.OnCreate(self, uiType, uiLayer);
 			self.UIs.Add(uiType, ui);

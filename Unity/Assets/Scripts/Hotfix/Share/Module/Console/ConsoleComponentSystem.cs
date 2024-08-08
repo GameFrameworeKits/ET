@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -13,11 +13,11 @@ namespace ET
         [EntitySystem]
         private static void Awake(this ConsoleComponent self)
         {
-            self.Start().Coroutine();
+            self.Start().Forget();
         }
 
         
-        private static async ETTask Start(this ConsoleComponent self)
+        private static async UniTask Start(this ConsoleComponent self)
         {
             self.CancellationTokenSource = new CancellationTokenSource();
 

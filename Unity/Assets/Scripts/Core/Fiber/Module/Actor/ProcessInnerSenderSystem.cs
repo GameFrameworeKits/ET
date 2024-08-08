@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -114,7 +115,7 @@ namespace ET
             return ++self.RpcId;
         }
 
-        public static async ETTask<IResponse> Call(
+        public static async UniTask<IResponse> Call(
                 this ProcessInnerSender self,
                 ActorId actorId,
                 IRequest request,
@@ -147,7 +148,7 @@ namespace ET
             MessageSenderStruct messageSenderStruct = new(actorId, requestType, needException);
             self.requestCallback.Add(rpcId, messageSenderStruct);
             
-            async ETTask Timeout()
+            async UniTask Timeout()
             {
                 await fiber.Root.GetComponent<TimerComponent>().WaitAsync(ProcessInnerSender.TIMEOUT_TIME);
 
@@ -167,7 +168,7 @@ namespace ET
                 }
             }
             
-            Timeout().Coroutine();
+            Timeout().Forget();
             
             long beginTime = TimeInfo.Instance.ServerFrameTime();
 

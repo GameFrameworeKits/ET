@@ -1,9 +1,11 @@
-﻿namespace ET.Client
+﻿using Cysharp.Threading.Tasks;
+
+namespace ET.Client
 {
 	[Event(SceneType.LockStep)]
 	public class LoginFinish_RemoveUILSLogin: AEvent<Scene, LoginFinish>
 	{
-		protected override async ETTask Run(Scene scene, LoginFinish args)
+		protected override async UniTask Run(Scene scene, LoginFinish args)
 		{
 			await UIHelper.Remove(scene, UIType.UILSLogin);
 		}

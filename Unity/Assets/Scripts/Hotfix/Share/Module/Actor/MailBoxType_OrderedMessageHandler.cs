@@ -1,14 +1,16 @@
-﻿namespace ET
+﻿using Cysharp.Threading.Tasks;
+
+namespace ET
 {
     [Invoke((long)MailBoxType.OrderedMessage)]
     public class MailBoxType_OrderedMessageHandler: AInvokeHandler<MailBoxInvoker>
     {
         public override void Handle(MailBoxInvoker args)
         {
-            HandleInner(args).Coroutine();
+            HandleInner(args).Forget();
         }
 
-        private static async ETTask HandleInner(MailBoxInvoker args)
+        private static async UniTask HandleInner(MailBoxInvoker args)
         {
             MailBoxComponent mailBoxComponent = args.MailBoxComponent;
             

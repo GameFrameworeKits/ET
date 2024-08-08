@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using MongoDB.Bson;
+﻿using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
     public static partial class TransferHelper
     {
-        public static async ETTask TransferAtFrameFinish(Unit unit, ActorId sceneInstanceId, string sceneName)
+        public static async UniTask TransferAtFrameFinish(Unit unit, ActorId sceneInstanceId, string sceneName)
         {
             await unit.Fiber().WaitFrameFinish();
 
@@ -13,7 +12,7 @@ namespace ET.Server
         }
         
 
-        public static async ETTask Transfer(Unit unit, ActorId sceneInstanceId, string sceneName)
+        public static async UniTask Transfer(Unit unit, ActorId sceneInstanceId, string sceneName)
         {
             Scene root = unit.Root();
             

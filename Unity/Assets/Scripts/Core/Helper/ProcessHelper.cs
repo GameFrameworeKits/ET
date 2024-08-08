@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Path = System.IO.Path;
 
 namespace ET
@@ -39,7 +39,7 @@ namespace ET
 
                 if (waitExit)
                 {
-                    WaitExitAsync(process).Coroutine();
+                    WaitExitAsync(process).Forget();
                 }
 
                 return process;
@@ -50,7 +50,7 @@ namespace ET
             }
         }
         
-        private static async ETTask WaitExitAsync(System.Diagnostics.Process process)
+        private static async UniTask WaitExitAsync(System.Diagnostics.Process process)
         {
             await process.WaitForExitAsync();
 #if UNITY
@@ -59,7 +59,7 @@ namespace ET
         }
         
 #if UNITY
-        private static async Task WaitForExitAsync(this System.Diagnostics.Process self)
+        private static async UniTask WaitForExitAsync(this System.Diagnostics.Process self)
         {
             if (!self.HasExited)
             {
@@ -79,7 +79,7 @@ namespace ET
                 throw;
             }
 
-            var tcs = new TaskCompletionSource<bool>();
+            var tcs = new UniTaskCompletionSource<bool>();
 
             void Handler(object s, EventArgs e) => tcs.TrySetResult(true);
             

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
     [MessageHandler(SceneType.NetClient)]
     public class Main2NetClient_LoginHandler: MessageHandler<Scene, Main2NetClient_Login, NetClient2Main_Login>
     {
-        protected override async ETTask Run(Scene root, Main2NetClient_Login request, NetClient2Main_Login response)
+        protected override async UniTask Run(Scene root, Main2NetClient_Login request, NetClient2Main_Login response)
         {
             string account = request.Account;
             string password = request.Password;

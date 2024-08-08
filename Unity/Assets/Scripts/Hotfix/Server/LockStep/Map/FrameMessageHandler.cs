@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
     [MessageHandler(SceneType.RoomRoot)]
     public class FrameMessageHandler: MessageHandler<Scene, FrameMessage>
     {
-        protected override async ETTask Run(Scene root, FrameMessage message)
+        protected override async UniTask Run(Scene root, FrameMessage message)
         {
             using FrameMessage _ = message;  // 让消息回到池中
             
@@ -42,7 +41,7 @@ namespace ET.Server
             }
             oneFrameInputs.Inputs[message.PlayerId] = message.Input;
 
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

@@ -4,6 +4,7 @@
     "references": [
         "Unity.ThirdParty",
         "Unity.Core",
+        "UniTask",
         "Unity.Mathematics",
         "Unity.Loader",
         "Unity.Model",

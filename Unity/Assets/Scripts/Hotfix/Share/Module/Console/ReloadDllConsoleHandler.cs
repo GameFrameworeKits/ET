@@ -1,11 +1,13 @@
+using Cysharp.Threading.Tasks;
+
 namespace ET
 {
     [ConsoleHandler(ConsoleMode.ReloadDll)]
     public class ReloadDllConsoleHandler: IConsoleHandler
     {
-        public async ETTask Run(Fiber fiber, ModeContex contex, string content)
+        public async UniTask Run(Fiber fiber, ModeContex contex, string content)
         {
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
             CodeLoader.Instance.Reload();
         }
     }

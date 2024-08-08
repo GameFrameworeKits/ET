@@ -2,14 +2,15 @@ using Luban;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace ET
 {
     [Invoke]
-    public class GetAllConfigBytes: AInvokeHandler<ConfigLoader.GetAllConfigBytes, ETTask<Dictionary<Type, ByteBuf>>>
+    public class GetAllConfigBytes: AInvokeHandler<ConfigLoader.GetAllConfigBytes, UniTask<Dictionary<Type, ByteBuf>>>
     {
-        public override async ETTask<Dictionary<Type, ByteBuf>> Handle(ConfigLoader.GetAllConfigBytes args)
+        public override async UniTask<Dictionary<Type, ByteBuf>> Handle(ConfigLoader.GetAllConfigBytes args)
         {
             Dictionary<Type, ByteBuf> output = new Dictionary<Type, ByteBuf>();
             HashSet<Type> configTypes = CodeTypes.Instance.GetTypes(typeof (ConfigAttribute));
@@ -68,9 +69,9 @@ namespace ET
     }
     
     [Invoke]
-    public class GetOneConfigBytes: AInvokeHandler<ConfigLoader.GetOneConfigBytes, ETTask<ByteBuf>>
+    public class GetOneConfigBytes: AInvokeHandler<ConfigLoader.GetOneConfigBytes, UniTask<ByteBuf>>
     {
-        public override async ETTask<ByteBuf> Handle(ConfigLoader.GetOneConfigBytes args)
+        public override async UniTask<ByteBuf> Handle(ConfigLoader.GetOneConfigBytes args)
         {
             string ct = "cs";
             GlobalConfig globalConfig = Resources.Load<GlobalConfig>("GlobalConfig");
@@ -109,7 +110,7 @@ namespace ET
                 configFilePath = $"../Config/Excel/{ct}/{configName}.bytes";
             }
 
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
             return new ByteBuf(File.ReadAllBytes(configFilePath));
         }
     }

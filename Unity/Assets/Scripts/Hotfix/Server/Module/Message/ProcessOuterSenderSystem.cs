@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
@@ -69,10 +70,10 @@ namespace ET.Server
                 case ILocationRequest:
                 case IRequest:
                 {
-                    CallInner().Coroutine();
+                    CallInner().Forget();
                     break;
 
-                    async ETTask CallInner()
+                    async UniTask CallInner()
                     {
                         IRequest req = (IRequest)message;
                         int rpcId = req.RpcId;
@@ -195,7 +196,7 @@ namespace ET.Server
             return ++self.RpcId;
         }
 
-        public static async ETTask<IResponse> Call(this ProcessOuterSender self, ActorId actorId, IRequest iRequest, bool needException = true)
+        public static async UniTask<IResponse> Call(this ProcessOuterSender self, ActorId actorId, IRequest iRequest, bool needException = true)
         {
             if (actorId == default)
             {
@@ -213,7 +214,7 @@ namespace ET.Server
             
             self.SendInner(actorId, iRequest as MessageObject);
 
-            async ETTask Timeout()
+            async UniTask Timeout()
             {
                 await fiber.Root.GetComponent<TimerComponent>().WaitAsync(ProcessOuterSender.TIMEOUT_TIME);
                 if (!self.requestCallback.Remove(rpcId, out MessageSenderStruct action))
@@ -232,7 +233,7 @@ namespace ET.Server
                 }
             }
 
-            Timeout().Coroutine();
+            Timeout().Forget();
 
             long beginTime = TimeInfo.Instance.ServerFrameTime();
 

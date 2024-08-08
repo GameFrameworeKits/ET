@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
 namespace ET.Client
@@ -5,7 +6,7 @@ namespace ET.Client
     [Event(SceneType.LockStep)]
     public class LSSceneChangeStart_AddComponent: AEvent<Scene, LSSceneChangeStart>
     {
-        protected override async ETTask Run(Scene clientScene, LSSceneChangeStart args)
+        protected override async UniTask Run(Scene clientScene, LSSceneChangeStart args)
         {
             Room room = clientScene.GetComponent<Room>();
             ResourcesLoaderComponent resourcesLoaderComponent = room.AddComponent<ResourcesLoaderComponent>();

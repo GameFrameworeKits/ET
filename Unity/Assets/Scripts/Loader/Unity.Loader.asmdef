@@ -4,6 +4,7 @@
     "references": [
         "Unity.ThirdParty",
         "Unity.Core",
+        "UniTask",
         "HybridCLR.Runtime",
         "MemoryPack",
         "YooAsset",

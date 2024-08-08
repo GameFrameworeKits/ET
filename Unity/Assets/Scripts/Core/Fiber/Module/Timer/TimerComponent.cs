@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -123,8 +126,8 @@ namespace ET
                 }
                 case TimerClass.OnceWaitTimer:
                 {
-                    ETTask tcs = timerAction.Object as ETTask;
-                    tcs.SetResult();
+                    var tcs = timerAction.Object as AutoResetUniTaskCompletionSourcePlus;
+                    tcs.TrySetResult();
                     break;
                 }
                 case TimerClass.RepeatedTimer:
@@ -170,74 +173,64 @@ namespace ET
             return true;
         }
 
-        public static async ETTask WaitTillAsync(this TimerComponent self, long tillTime, ETCancellationToken cancellationToken = null)
+        public static UniTask WaitTillAsync(this TimerComponent self, long tillTime, CancellationToken cancellationToken = default)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return UniTask.FromCanceled(cancellationToken);
+            }
             long timeNow = self.GetNow();
             if (timeNow >= tillTime)
             {
-                return;
+                return UniTask.CompletedTask;
             }
 
-            ETTask tcs = ETTask.Create(true);
+            var tcs = AutoResetUniTaskCompletionSourcePlus.Create();
             long timerId = self.GetId();
             TimerAction timer = new(TimerClass.OnceWaitTimer, timeNow, tillTime - timeNow, 0, tcs);
             self.AddTimer(timerId, ref timer);
 
             void CancelAction()
             {
-                if (self.Remove(timerId))
-                {
-                    tcs.SetResult();
-                }
+                self.Remove(timerId);
             }
 
-            try
-            {
-                cancellationToken?.Add(CancelAction);
-                await tcs;
-            }
-            finally
-            {
-                cancellationToken?.Remove(CancelAction);
-            }
+            tcs.AddOnCancelAction(CancelAction);
+            tcs.AttachCancellation(cancellationToken);
+            return tcs.Task;
         }
 
-        public static async ETTask WaitFrameAsync(this TimerComponent self, ETCancellationToken cancellationToken = null)
+        public static UniTask WaitFrameAsync(this TimerComponent self, CancellationToken cancellationToken = default)
         {
-            await self.WaitAsync(1, cancellationToken);
+            return self.WaitAsync(1, cancellationToken);
         }
 
-        public static async ETTask WaitAsync(this TimerComponent self, long time, ETCancellationToken cancellationToken = null)
+        public static UniTask WaitAsync(this TimerComponent self, long time, CancellationToken cancellationToken = default)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return UniTask.FromCanceled(cancellationToken);
+            }
             if (time == 0)
             {
-                return;
+                return UniTask.CompletedTask;
             }
 
             long timeNow = self.GetNow();
 
-            ETTask tcs = ETTask.Create(true);
+            var tcs = AutoResetUniTaskCompletionSourcePlus.Create();
             long timerId = self.GetId();
             TimerAction timer = new (TimerClass.OnceWaitTimer, timeNow, time, 0, tcs);
             self.AddTimer(timerId, ref timer);
 
             void CancelAction()
             {
-                if (self.Remove(timerId))
-                {
-                    tcs.SetResult();
-                }
+                self.Remove(timerId);
             }
 
-            try
-            {
-                cancellationToken?.Add(CancelAction);
-                await tcs;
-            }
-            finally
-            {
-                cancellationToken?.Remove(CancelAction);
-            }
+            tcs.AddOnCancelAction(CancelAction);
+            tcs.AttachCancellation(cancellationToken);
+            return tcs.Task;
         }
 
         // 用这个优点是可以热更，缺点是回调式的写法，逻辑不连贯。WaitTillAsync不能热更，优点是逻辑连贯。

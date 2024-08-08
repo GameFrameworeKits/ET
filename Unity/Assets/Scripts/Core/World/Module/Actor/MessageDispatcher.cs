@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -85,7 +86,7 @@ namespace ET
             this.messageHandlers[type].Add(handler);
         }
 
-        public async ETTask Handle(Entity entity, Address fromAddress, MessageObject message)
+        public async UniTask Handle(Entity entity, Address fromAddress, MessageObject message)
         {
             List<MessageDispatcherInfo> list;
             if (!this.messageHandlers.TryGetValue(message.GetType(), out list))

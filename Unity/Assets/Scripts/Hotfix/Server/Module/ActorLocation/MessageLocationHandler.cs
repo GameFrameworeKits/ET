@@ -1,12 +1,13 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
     public abstract class MessageLocationHandler<E, Message>: HandlerObject, IMHandler where E : Entity where Message : class, ILocationMessage
     {
-        protected abstract ETTask Run(E entity, Message message);
+        protected abstract UniTask Run(E entity, Message message);
 
-        public async ETTask Handle(Entity entity, Address fromAddress, MessageObject actorMessage)
+        public async UniTask Handle(Entity entity, Address fromAddress, MessageObject actorMessage)
         {
             Fiber fiber = entity.Fiber();
             if (actorMessage is not Message message)
@@ -43,9 +44,9 @@ namespace ET.Server
     
     public abstract class MessageLocationHandler<E, Request, Response>: HandlerObject, IMHandler where E : Entity where Request : MessageObject, ILocationRequest where Response : MessageObject, ILocationResponse
     {
-        protected abstract ETTask Run(E unit, Request request, Response response);
+        protected abstract UniTask Run(E unit, Request request, Response response);
 
-        public async ETTask Handle(Entity entity, Address fromAddress, MessageObject actorMessage)
+        public async UniTask Handle(Entity entity, Address fromAddress, MessageObject actorMessage)
         {
             try
             {

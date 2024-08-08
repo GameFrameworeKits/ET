@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -17,9 +18,9 @@ namespace ET
 			}
 		}
 
-		protected abstract ETTask Run(S scene, A a);
+		protected abstract UniTask Run(S scene, A a);
 
-		public async ETTask Handle(S scene, A a)
+		public async UniTask Handle(S scene, A a)
 		{
 			try
 			{

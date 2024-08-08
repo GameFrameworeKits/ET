@@ -1,9 +1,11 @@
+using Cysharp.Threading.Tasks;
+
 namespace ET.Server
 {
     [MessageHandler(SceneType.RoomRoot)]
     public class C2Room_CheckHashHandler: MessageHandler<Scene, C2Room_CheckHash>
     {
-        protected override async ETTask Run(Scene root, C2Room_CheckHash message)
+        protected override async UniTask Run(Scene root, C2Room_CheckHash message)
         {
             Room room = root.GetComponent<Room>();
             long hash = room.FrameBuffer.GetHash(message.Frame);
@@ -15,7 +17,7 @@ namespace ET.Server
                 room2CCheckHashFail.LSWorldBytes = bytes;
                 room.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession).Send(message.PlayerId, room2CCheckHashFail);
             }
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

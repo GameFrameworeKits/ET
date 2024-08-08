@@ -1,9 +1,11 @@
+using Cysharp.Threading.Tasks;
+
 namespace ET.Client
 {
     [MessageHandler(SceneType.LockStep)]
     public class Room2C_CheckHashFailHandler: MessageHandler<Scene, Room2C_CheckHashFail>
     {
-        protected override async ETTask Run(Scene root, Room2C_CheckHashFail message)
+        protected override async UniTask Run(Scene root, Room2C_CheckHashFail message)
         {
             LSWorld serverWorld = MemoryPackHelper.Deserialize(typeof(LSWorld), message.LSWorldBytes, 0, message.LSWorldBytes.Length) as LSWorld;
             using (root.AddChild(serverWorld))
@@ -18,7 +20,7 @@ namespace ET.Client
                 Log.Debug($"check hash fail, client: {message.Frame} {clientWorld.ToJson()}");
             }
             
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

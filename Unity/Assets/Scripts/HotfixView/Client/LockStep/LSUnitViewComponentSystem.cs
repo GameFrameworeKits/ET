@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace ET.Client
 {
@@ -17,7 +18,7 @@ namespace ET.Client
 
         }
 
-        public static async ETTask InitAsync(this LSUnitViewComponent self)
+        public static async UniTask InitAsync(this LSUnitViewComponent self)
         {
             Room room = self.Room();
             LSUnitComponent lsUnitComponent = room.LSWorld.GetComponent<LSUnitComponent>();

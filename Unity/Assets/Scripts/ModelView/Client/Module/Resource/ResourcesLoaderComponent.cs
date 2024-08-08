@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using YooAsset;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
@@ -49,7 +50,7 @@ namespace ET.Client
             }
         }
 
-        public static async ETTask<T> LoadAssetAsync<T>(this ResourcesLoaderComponent self, string location) where T : UnityEngine.Object
+        public static async UniTask<T> LoadAssetAsync<T>(this ResourcesLoaderComponent self, string location) where T : UnityEngine.Object
         {
             using CoroutineLock coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());
 
@@ -66,7 +67,7 @@ namespace ET.Client
             return (T)((AssetHandle)handler).AssetObject;
         }
 
-        public static async ETTask<Dictionary<string, T>> LoadAllAssetsAsync<T>(this ResourcesLoaderComponent self, string location) where T : UnityEngine.Object
+        public static async UniTask<Dictionary<string, T>> LoadAllAssetsAsync<T>(this ResourcesLoaderComponent self, string location) where T : UnityEngine.Object
         {
             using CoroutineLock coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());
 
@@ -88,7 +89,7 @@ namespace ET.Client
             return dictionary;
         }
 
-        public static async ETTask LoadSceneAsync(this ResourcesLoaderComponent self, string location, LoadSceneMode loadSceneMode)
+        public static async UniTask LoadSceneAsync(this ResourcesLoaderComponent self, string location, LoadSceneMode loadSceneMode)
         {
             using CoroutineLock coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());
 

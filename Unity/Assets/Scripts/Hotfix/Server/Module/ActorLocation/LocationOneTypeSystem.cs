@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
@@ -32,7 +32,7 @@ namespace ET.Server
         {
         }
         
-        public static async ETTask Add(this LocationOneType self, long key, ActorId instanceId)
+        public static async UniTask Add(this LocationOneType self, long key, ActorId instanceId)
         {
             int coroutineLockType = ((int)self.Id << 16) | CoroutineLockType.Location;
             using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(coroutineLockType, key))
@@ -42,7 +42,7 @@ namespace ET.Server
             }
         }
 
-        public static async ETTask Remove(this LocationOneType self, long key)
+        public static async UniTask Remove(this LocationOneType self, long key)
         {
             int coroutineLockType = ((int)self.Id << 16) | CoroutineLockType.Location;
             using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(coroutineLockType, key))
@@ -52,7 +52,7 @@ namespace ET.Server
             }
         }
 
-        public static async ETTask Lock(this LocationOneType self, long key, ActorId actorId, int time = 0)
+        public static async UniTask Lock(this LocationOneType self, long key, ActorId actorId, int time = 0)
         {
             int coroutineLockType = ((int)self.Id << 16) | CoroutineLockType.Location;
             CoroutineLock coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(coroutineLockType, key);
@@ -64,7 +64,7 @@ namespace ET.Server
 
             if (time > 0)
             {
-                async ETTask TimeWaitAsync()
+                async UniTask TimeWaitAsync()
                 {
                     long lockInfoInstanceId = lockInfo.InstanceId;
                     await self.Root().GetComponent<TimerComponent>().WaitAsync(time);
@@ -75,7 +75,7 @@ namespace ET.Server
                     Log.Info($"location timeout unlock key: {key} instanceId: {actorId} newInstanceId: {actorId}");
                     self.UnLock(key, actorId, actorId);
                 }
-                TimeWaitAsync().Coroutine();
+                TimeWaitAsync().Forget();
             }
         }
 
@@ -104,7 +104,7 @@ namespace ET.Server
             lockInfo.Dispose();
         }
 
-        public static async ETTask<ActorId> Get(this LocationOneType self, long key)
+        public static async UniTask<ActorId> Get(this LocationOneType self, long key)
         {
             int coroutineLockType = ((int)self.Id << 16) | CoroutineLockType.Location;
             using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(coroutineLockType, key))
