@@ -1,10 +1,11 @@
+using Cysharp.Threading.Tasks;
+
 namespace ET.Client
 {
-
     public static partial class LSSceneChangeHelper
     {
         // 场景切换协程
-        public static async ETTask SceneChangeTo(Scene root, string sceneName, long sceneInstanceId)
+        public static async UniTask SceneChangeTo(Scene root, string sceneName, long sceneInstanceId)
         {
             root.RemoveComponent<Room>();
 
@@ -29,7 +30,7 @@ namespace ET.Client
         }
         
         // 场景切换协程
-        public static async ETTask SceneChangeToReplay(Scene root, Replay replay)
+        public static async UniTask SceneChangeToReplay(Scene root, Replay replay)
         {
             root.RemoveComponent<Room>();
 
@@ -50,7 +51,7 @@ namespace ET.Client
         }
         
         // 场景切换协程
-        public static async ETTask SceneChangeToReconnect(Scene root, G2C_Reconnect message)
+        public static async UniTask SceneChangeToReconnect(Scene root, G2C_Reconnect message)
         {
             root.RemoveComponent<Room>();
 

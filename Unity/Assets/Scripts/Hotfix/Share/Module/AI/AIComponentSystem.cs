@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -34,8 +36,8 @@ namespace ET
         private static void Destroy(this AIComponent self)
         {
             self.Root().GetComponent<TimerComponent>()?.Remove(ref self.Timer);
-            self.CancellationToken?.Cancel();
-            self.CancellationToken = null;
+            self.CancellationTokenSource?.Cancel();
+            self.CancellationTokenSource = null;
             self.Current = 0;
         }
 
@@ -73,11 +75,11 @@ namespace ET
                 }
 
                 self.Cancel(); // 取消之前的行为
-                ETCancellationToken cancellationToken = new();
-                self.CancellationToken = cancellationToken;
+                CancellationTokenSource cts = new();
+                self.CancellationTokenSource = cts;
                 self.Current = aiConfig.Id;
 
-                aaiHandler.Execute(self, aiConfig, cancellationToken).Coroutine();
+                aaiHandler.Execute(self, aiConfig, cts.Token).Forget();
                 return;
             }
             
@@ -85,9 +87,9 @@ namespace ET
 
         private static void Cancel(this AIComponent self)
         {
-            self.CancellationToken?.Cancel();
+            self.CancellationTokenSource?.Cancel();
             self.Current = 0;
-            self.CancellationToken = null;
+            self.CancellationTokenSource = null;
         }
     }
 } 

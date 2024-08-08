@@ -3,6 +3,7 @@
     "rootNamespace": "ET",
     "references": [
         "Unity.ThirdParty",
+        "UniTask",
         "Unity.Mathematics",
         "MemoryPack",
         "BestHTTP"

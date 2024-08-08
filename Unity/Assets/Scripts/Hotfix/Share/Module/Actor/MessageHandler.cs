@@ -1,12 +1,13 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
     public abstract class MessageHandler<E, Message>: HandlerObject, IMHandler where E : Entity where Message : class, IMessage
     {
-        protected abstract ETTask Run(E entity, Message message);
+        protected abstract UniTask Run(E entity, Message message);
 
-        public async ETTask Handle(Entity entity, Address fromAddress, MessageObject actorMessage)
+        public async UniTask Handle(Entity entity, Address fromAddress, MessageObject actorMessage)
         {
             if (actorMessage is not Message msg)
             {
@@ -41,9 +42,9 @@ namespace ET
     
     public abstract class MessageHandler<E, Request, Response>: HandlerObject, IMHandler where E : Entity where Request : MessageObject, IRequest where Response : MessageObject, IResponse
     {
-        protected abstract ETTask Run(E unit, Request request, Response response);
+        protected abstract UniTask Run(E unit, Request request, Response response);
 
-        public async ETTask Handle(Entity entity, Address fromAddress, MessageObject actorMessage)
+        public async UniTask Handle(Entity entity, Address fromAddress, MessageObject actorMessage)
         {
             try
             {

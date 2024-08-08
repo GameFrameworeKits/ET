@@ -1,6 +1,5 @@
 ﻿using System;
-using System.IO;
-using MongoDB.Bson;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
@@ -93,10 +92,10 @@ namespace ET.Server
         // 发送过去找不到actor不会重试,用此方法，你得保证actor提前注册好了location
         public static void Send(this MessageLocationSenderOneType self, long entityId, IMessage message)
         {
-            self.SendInner(entityId, message).Coroutine();
+            self.SendInner(entityId, message).Forget();
         }
         
-        private static async ETTask SendInner(this MessageLocationSenderOneType self, long entityId, IMessage message)
+        private static async UniTask SendInner(this MessageLocationSenderOneType self, long entityId, IMessage message)
         {
             MessageLocationSender messageLocationSender = self.GetOrCreate(entityId);
 
@@ -127,7 +126,7 @@ namespace ET.Server
 
         // 发给不会改变位置的actorlocation用这个，这种actor消息不会阻塞发送队列，性能更高，发送过去找不到actor不会重试
         // 发送过去找不到actor不会重试,用此方法，你得保证actor提前注册好了location
-        public static async ETTask<IResponse> Call(this MessageLocationSenderOneType self, long entityId, IRequest request)
+        public static async UniTask<IResponse> Call(this MessageLocationSenderOneType self, long entityId, IRequest request)
         {
             MessageLocationSender messageLocationSender = self.GetOrCreate(entityId);
 
@@ -158,10 +157,10 @@ namespace ET.Server
 
         public static void Send(this MessageLocationSenderOneType self, long entityId, ILocationMessage message)
         {
-            self.Call(entityId, message).Coroutine();
+            self.Call(entityId, message).Forget();
         }
 
-        public static async ETTask<IResponse> Call(this MessageLocationSenderOneType self, long entityId, ILocationRequest iRequest)
+        public static async UniTask<IResponse> Call(this MessageLocationSenderOneType self, long entityId, ILocationRequest iRequest)
         {
             MessageLocationSender messageLocationSender = self.GetOrCreate(entityId);
 
@@ -192,7 +191,7 @@ namespace ET.Server
             }
         }
 
-        private static async ETTask<IResponse> CallInner(this MessageLocationSenderOneType self, MessageLocationSender messageLocationSender, IRequest iRequest)
+        private static async UniTask<IResponse> CallInner(this MessageLocationSenderOneType self, MessageLocationSender messageLocationSender, IRequest iRequest)
         {
             int failTimes = 0;
             long instanceId = messageLocationSender.InstanceId;

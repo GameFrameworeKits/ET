@@ -1,4 +1,4 @@
-﻿using Unity.Mathematics;
+﻿using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
@@ -26,7 +26,7 @@ namespace ET.Client
 		        if (unitInfo.MoveInfo.Points.Count > 0)
 				{
 					unitInfo.MoveInfo.Points[0] = unit.Position;
-					unit.MoveToAsync(unitInfo.MoveInfo.Points).Coroutine();
+					unit.MoveToAsync(unitInfo.MoveInfo.Points).Forget();
 				}
 	        }
 

@@ -1,7 +1,9 @@
+using Cysharp.Threading.Tasks;
+
 namespace ET
 {
     public interface IConsoleHandler
     {
-        ETTask Run(Fiber fiber, ModeContex contex, string content);
+        UniTask Run(Fiber fiber, ModeContex contex, string content);
     }
 }

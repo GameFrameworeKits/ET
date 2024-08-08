@@ -1,6 +1,7 @@
 ﻿using MemoryPack;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Serializers;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -25,10 +26,10 @@ namespace ET
         
         public static void Start()
         {
-            StartAsync().Coroutine();
+            StartAsync().Forget();
         }
         
-        private static async ETTask StartAsync()
+        private static async UniTaskVoid StartAsync()
         {
             WinPeriod.Init();
 

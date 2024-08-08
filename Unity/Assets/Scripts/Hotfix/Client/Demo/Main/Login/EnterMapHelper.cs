@@ -1,11 +1,11 @@
 using System;
-
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
     public static partial class EnterMapHelper
     {
-        public static async ETTask EnterMapAsync(Scene root)
+        public static async UniTask EnterMapAsync(Scene root)
         {
             try
             {
@@ -22,7 +22,7 @@ namespace ET.Client
             }	
         }
         
-        public static async ETTask Match(Fiber fiber)
+        public static async UniTask Match(Fiber fiber)
         {
             try
             {

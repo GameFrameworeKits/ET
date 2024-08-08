@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -47,11 +49,11 @@ namespace ET
 
         private class ResultCallback<K>: Object, IDestroyRun where K : struct, IWaitType
         {
-            private ETTask<K> tcs;
+            private AutoResetUniTaskCompletionSourcePlus<K> tcs;
 
             public ResultCallback()
             {
-                this.tcs = ETTask<K>.Create(true);
+                this.tcs = AutoResetUniTaskCompletionSourcePlus<K>.Create();
             }
 
             public bool IsDisposed
@@ -62,24 +64,24 @@ namespace ET
                 }
             }
 
-            public ETTask<K> Task => this.tcs;
+            public AutoResetUniTaskCompletionSourcePlus<K> Task => this.tcs;
 
             public void SetResult(K k)
             {
                 var t = tcs;
                 this.tcs = null;
-                t.SetResult(k);
+                t.TrySetResult(k);
             }
 
             public void SetResult()
             {
                 var t = tcs;
                 this.tcs = null;
-                t.SetResult(new K() { Error = WaitTypeError.Destroy });
+                t.TrySetResult(new K() { Error = WaitTypeError.Destroy });
             }
         }
         
-        public static async ETTask<T> Wait<T>(this ObjectWait self, ETCancellationToken cancellationToken = null) where T : struct, IWaitType
+        public static UniTask<T> Wait<T>(this ObjectWait self, CancellationToken cancellationToken = default) where T : struct, IWaitType
         {
             ResultCallback<T> tcs = new ResultCallback<T>();
             Type type = typeof (T);
@@ -90,29 +92,22 @@ namespace ET
                 self.Notify(new T() { Error = WaitTypeError.Cancel });
             }
 
-            T ret;
-            try
-            {
-                cancellationToken?.Add(CancelAction);
-                ret = await tcs.Task;
-            }
-            finally
-            {
-                cancellationToken?.Remove(CancelAction);    
-            }
-            return ret;
+            tcs.Task.AddOnCancelAction(CancelAction);
+            tcs.Task.AttachCancellation(cancellationToken);
+            return tcs.Task.Task;
         }
 
-        public static async ETTask<T> Wait<T>(this ObjectWait self, int timeout, ETCancellationToken cancellationToken = null) where T : struct, IWaitType
+        public static UniTask<T> Wait<T>(this ObjectWait self, int timeout, CancellationToken cancellationToken = default) where T : struct, IWaitType
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return UniTask.FromCanceled<T>(cancellationToken);
+            }
+            
             ResultCallback<T> tcs = new ResultCallback<T>();
-            async ETTask WaitTimeout()
+            async UniTaskVoid WaitTimeout()
             {
                 await self.Root().GetComponent<TimerComponent>().WaitAsync(timeout, cancellationToken);
-                if (cancellationToken.IsCancel())
-                {
-                    return;
-                }
                 if (tcs.IsDisposed)
                 {
                     return;
@@ -120,7 +115,7 @@ namespace ET
                 self.Notify(new T() { Error = WaitTypeError.Timeout });
             }
             
-            WaitTimeout().Coroutine();
+            WaitTimeout().Forget();
             
             self.tcss.Add(typeof (T), tcs);
             
@@ -129,17 +124,9 @@ namespace ET
                 self.Notify(new T() { Error = WaitTypeError.Cancel });
             }
             
-            T ret;
-            try
-            {
-                cancellationToken?.Add(CancelAction);
-                ret = await tcs.Task;
-            }
-            finally
-            {
-                cancellationToken?.Remove(CancelAction);    
-            }
-            return ret;
+            tcs.Task.AddOnCancelAction(CancelAction);
+            tcs.Task.AttachCancellation(cancellationToken);
+            return tcs.Task.Task;
         }
 
         public static void Notify<T>(this ObjectWait self, T obj) where T : struct, IWaitType

@@ -1,11 +1,12 @@
 ﻿using System.Net;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
     [Invoke((long)SceneType.NetInner)]
-    public class FiberInit_NetInner: AInvokeHandler<FiberInit, ETTask>
+    public class FiberInit_NetInner: AInvokeHandler<FiberInit, UniTask>
     {
-        public override async ETTask Handle(FiberInit fiberInit)
+        public override async UniTask Handle(FiberInit fiberInit)
         {
             Scene root = fiberInit.Fiber.Root;
             root.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.UnOrderedMessage);
@@ -15,7 +16,7 @@ namespace ET.Server
             root.AddComponent<ProcessOuterSender, IPEndPoint>(startProcessConfig.IPEndPoint);
             root.AddComponent<ProcessInnerSender>();
 
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

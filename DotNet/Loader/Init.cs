@@ -22,7 +22,6 @@ namespace ET
 				
 				World.Instance.AddSingleton<Logger>().Log = new NLogger(Options.Instance.AppType.ToString(), Options.Instance.Process, 0);
 				
-				ETTask.ExceptionHandler += Log.Error;
 				World.Instance.AddSingleton<TimeInfo>();
 				World.Instance.AddSingleton<FiberManager>();
 

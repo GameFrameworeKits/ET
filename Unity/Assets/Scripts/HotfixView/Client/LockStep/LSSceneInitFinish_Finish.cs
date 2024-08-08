@@ -1,9 +1,11 @@
+using Cysharp.Threading.Tasks;
+
 namespace ET.Client
 {
     [Event(SceneType.LockStep)]
     public class LSSceneInitFinish_Finish: AEvent<Scene, LSSceneInitFinish>
     {
-        protected override async ETTask Run(Scene clientScene, LSSceneInitFinish args)
+        protected override async UniTask Run(Scene clientScene, LSSceneInitFinish args)
         {
             Room room = clientScene.GetComponent<Room>();
             
@@ -17,7 +19,7 @@ namespace ET.Client
             }
 
             await UIHelper.Remove(clientScene, UIType.UILSLobby);
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

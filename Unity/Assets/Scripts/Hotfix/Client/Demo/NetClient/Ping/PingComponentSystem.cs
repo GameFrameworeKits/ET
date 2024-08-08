@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
@@ -8,7 +9,7 @@ namespace ET.Client
         [EntitySystem]
         private static void Awake(this PingComponent self)
         {
-            self.PingAsync().Coroutine();
+            self.PingAsync().Forget();
         }
         
         [EntitySystem]
@@ -17,7 +18,7 @@ namespace ET.Client
             self.Ping = default;
         }
         
-        private static async ETTask PingAsync(this PingComponent self)
+        private static async UniTask PingAsync(this PingComponent self)
         {
             Session session = self.GetParent<Session>();
             long instanceId = self.InstanceId;

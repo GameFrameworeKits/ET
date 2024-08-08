@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
@@ -9,7 +10,7 @@ namespace ET.Server
             return StartSceneConfigCategory.Instance.LocationConfig.ActorId;
         }
 
-        public static async ETTask Add(this LocationProxyComponent self, int type, long key, ActorId actorId)
+        public static async UniTask Add(this LocationProxyComponent self, int type, long key, ActorId actorId)
         {
             Fiber fiber = self.Fiber();
             Log.Info($"location proxy add {key}, {actorId} {TimeInfo.Instance.ServerNow()}");
@@ -20,7 +21,7 @@ namespace ET.Server
             await fiber.Root.GetComponent<MessageSender>().Call(GetLocationSceneId(key), objectAddRequest);
         }
 
-        public static async ETTask Lock(this LocationProxyComponent self, int type, long key, ActorId actorId, int time = 60000)
+        public static async UniTask Lock(this LocationProxyComponent self, int type, long key, ActorId actorId, int time = 60000)
         {
             Fiber fiber = self.Fiber();
             Log.Info($"location proxy lock {key}, {actorId} {TimeInfo.Instance.ServerNow()}");
@@ -33,7 +34,7 @@ namespace ET.Server
             await fiber.Root.GetComponent<MessageSender>().Call(GetLocationSceneId(key), objectLockRequest);
         }
 
-        public static async ETTask UnLock(this LocationProxyComponent self, int type, long key, ActorId oldActorId, ActorId newActorId)
+        public static async UniTask UnLock(this LocationProxyComponent self, int type, long key, ActorId oldActorId, ActorId newActorId)
         {
             Fiber fiber = self.Fiber();
             Log.Info($"location proxy unlock {key}, {newActorId} {TimeInfo.Instance.ServerNow()}");
@@ -45,7 +46,7 @@ namespace ET.Server
             await fiber.Root.GetComponent<MessageSender>().Call(GetLocationSceneId(key), objectUnLockRequest);
         }
 
-        public static async ETTask Remove(this LocationProxyComponent self, int type, long key)
+        public static async UniTask Remove(this LocationProxyComponent self, int type, long key)
         {
             Fiber fiber = self.Fiber();
             Log.Info($"location proxy remove {key}, {TimeInfo.Instance.ServerNow()}");
@@ -56,7 +57,7 @@ namespace ET.Server
             await fiber.Root.GetComponent<MessageSender>().Call(GetLocationSceneId(key), objectRemoveRequest);
         }
 
-        public static async ETTask<ActorId> Get(this LocationProxyComponent self, int type, long key)
+        public static async UniTask<ActorId> Get(this LocationProxyComponent self, int type, long key)
         {
             if (key == 0)
             {
@@ -72,12 +73,12 @@ namespace ET.Server
             return response.ActorId;
         }
 
-        public static async ETTask AddLocation(this Entity self, int type)
+        public static async UniTask AddLocation(this Entity self, int type)
         {
             await self.Root().GetComponent<LocationProxyComponent>().Add(type, self.Id, self.GetActorId());
         }
 
-        public static async ETTask RemoveLocation(this Entity self, int type)
+        public static async UniTask RemoveLocation(this Entity self, int type)
         {
             await self.Root().GetComponent<LocationProxyComponent>().Remove(type, self.Id);
         }

@@ -1,7 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
@@ -16,13 +15,13 @@ namespace ET.Client
             self.RouterManagerPort = port;
         }
         
-        public static async ETTask Init(this RouterAddressComponent self)
+        public static async UniTask Init(this RouterAddressComponent self)
         {
             self.RouterManagerIPAddress = NetworkHelper.GetHostAddress(self.RouterManagerHost);
             await self.GetAllRouter();
         }
 
-        private static async ETTask GetAllRouter(this RouterAddressComponent self)
+        private static async UniTask GetAllRouter(this RouterAddressComponent self)
         {
             string url = $"http://{self.RouterManagerHost}:{self.RouterManagerPort}/get_router?v={RandomGenerator.RandUInt32()}";
             Log.Debug($"start get router info: {url}");
@@ -35,11 +34,11 @@ namespace ET.Client
             // 打乱顺序
             RandomGenerator.BreakRank(self.Info.Routers);
             
-            self.WaitTenMinGetAllRouter().Coroutine();
+            self.WaitTenMinGetAllRouter().Forget();
         }
         
         // 等10分钟再获取一次
-        public static async ETTask WaitTenMinGetAllRouter(this RouterAddressComponent self)
+        public static async UniTask WaitTenMinGetAllRouter(this RouterAddressComponent self)
         {
             await self.Root().GetComponent<TimerComponent>().WaitAsync(5 * 60 * 1000);
             if (self.IsDisposed)

@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace ET.Client
 {
     [UIEvent(UIType.UILSLobby)]
     public class UILSLobbyEvent: AUIEvent
     {
-        public override async ETTask<UI> OnCreate(UIComponent uiComponent, UILayer uiLayer)
+        public override async UniTask<UI> OnCreate(UIComponent uiComponent, UILayer uiLayer)
         {
             string assetsName = $"Assets/Bundles/UI/LockStep/{UIType.UILSLobby}.prefab";
             GameObject bundleGameObject = await uiComponent.Scene().GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);

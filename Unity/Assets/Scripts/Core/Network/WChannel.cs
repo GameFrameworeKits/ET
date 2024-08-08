@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -37,8 +38,8 @@ namespace ET
             
             this.Service.ThreadSynchronizationContext.Post(()=>
             {
-                this.StartRecv().Coroutine();
-                this.StartSend().Coroutine();
+                this.StartRecv().Forget();
+                this.StartSend().Forget();
             });
         }
 
@@ -51,7 +52,7 @@ namespace ET
 
             isConnected = false;
             
-            this.Service.ThreadSynchronizationContext.Post(()=>this.ConnectAsync($"ws://{ipEndPoint}").Coroutine());
+            this.Service.ThreadSynchronizationContext.Post(()=>this.ConnectAsync($"ws://{ipEndPoint}").Forget());
         }
 
         public override void Dispose()
@@ -68,15 +69,15 @@ namespace ET
             this.webSocket.Dispose();
         }
 
-        private async ETTask ConnectAsync(string url)
+        private async UniTask ConnectAsync(string url)
         {
             try
             {
                 await ((ClientWebSocket) this.webSocket).ConnectAsync(new Uri(url), cancellationTokenSource.Token);
                 isConnected = true;
                 
-                this.StartRecv().Coroutine();
-                this.StartSend().Coroutine();
+                this.StartRecv().Forget();
+                this.StartSend().Forget();
             }
             catch (Exception e)
             {
@@ -91,11 +92,11 @@ namespace ET
 
             if (this.isConnected)
             {
-                this.StartSend().Coroutine();
+                this.StartSend().Forget();
             }
         }
 
-        private async ETTask StartSend()
+        private async UniTask StartSend()
         {
             if (this.IsDisposed)
             {
@@ -152,7 +153,7 @@ namespace ET
 
         private readonly byte[] cache = new byte[ushort.MaxValue];
 
-        public async ETTask StartRecv()
+        public async UniTask StartRecv()
         {
             if (this.IsDisposed)
             {

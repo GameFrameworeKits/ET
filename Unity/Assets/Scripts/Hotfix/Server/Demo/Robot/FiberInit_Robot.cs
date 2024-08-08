@@ -1,9 +1,11 @@
-﻿namespace ET.Client
+﻿using Cysharp.Threading.Tasks;
+
+namespace ET.Client
 {
     [Invoke((long)SceneType.Robot)]
-    public class FiberInit_Robot: AInvokeHandler<FiberInit, ETTask>
+    public class FiberInit_Robot: AInvokeHandler<FiberInit, UniTask>
     {
-        public override async ETTask Handle(FiberInit fiberInit)
+        public override async UniTask Handle(FiberInit fiberInit)
         {
             Scene root = fiberInit.Fiber.Root;
             root.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.UnOrderedMessage);

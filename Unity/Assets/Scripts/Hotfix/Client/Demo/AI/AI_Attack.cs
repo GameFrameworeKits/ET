@@ -1,3 +1,6 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
+
 namespace ET.Client
 {
     public class AI_Attack: AAIHandler
@@ -12,7 +15,7 @@ namespace ET.Client
             return 1;
         }
 
-        public override async ETTask Execute(AIComponent aiComponent, AIConfig aiConfig, ETCancellationToken cancellationToken)
+        public override async UniTask Execute(AIComponent aiComponent, AIConfig aiConfig, CancellationToken cancellationToken)
         {
             Fiber fiber = aiComponent.Fiber();
 
@@ -33,10 +36,6 @@ namespace ET.Client
 
                 // 因为协程可能被中断，任何协程都要传入cancellationToken，判断如果是中断则要返回
                 await fiber.Root.GetComponent<TimerComponent>().WaitAsync(1000, cancellationToken);
-                if (cancellationToken.IsCancel())
-                {
-                    return;
-                }
             }
         }
     }

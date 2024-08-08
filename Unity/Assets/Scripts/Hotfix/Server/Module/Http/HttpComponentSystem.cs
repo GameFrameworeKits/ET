@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
@@ -26,7 +27,7 @@ namespace ET.Server
 
                 self.Listener.Start();
 
-                self.Accept().Coroutine();
+                self.Accept().Forget();
             }
             catch (HttpListenerException e)
             {
@@ -41,7 +42,7 @@ namespace ET.Server
             self.Listener.Close();
         }
 
-        private static async ETTask Accept(this HttpComponent self)
+        private static async UniTask Accept(this HttpComponent self)
         {
             long instanceId = self.InstanceId;
             while (self.InstanceId == instanceId)
@@ -49,7 +50,7 @@ namespace ET.Server
                 try
                 {
                     HttpListenerContext context = await self.Listener.GetContextAsync();
-                    self.Handle(context).Coroutine();
+                    self.Handle(context).Forget();
                 }
                 catch (ObjectDisposedException)
                 {
@@ -61,7 +62,7 @@ namespace ET.Server
             }
         }
 
-        private static async ETTask Handle(this HttpComponent self, HttpListenerContext context)
+        private static async UniTask Handle(this HttpComponent self, HttpListenerContext context)
         {
             try
             {

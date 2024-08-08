@@ -1,12 +1,13 @@
 ﻿using System;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
 	[UIEvent(UIType.UIHelp)]
     public class UIHelpEvent: AUIEvent
     {
-        public override async ETTask<UI> OnCreate(UIComponent uiComponent, UILayer uiLayer)
+        public override async UniTask<UI> OnCreate(UIComponent uiComponent, UILayer uiLayer)
         {
 	        try
 	        {

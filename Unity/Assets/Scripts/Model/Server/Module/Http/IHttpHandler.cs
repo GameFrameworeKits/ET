@@ -1,9 +1,11 @@
 using System.Net;
+using System.Net;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
     public interface IHttpHandler
     {
-        ETTask Handle(Scene scene, HttpListenerContext context);
+        UniTask Handle(Scene scene, HttpListenerContext context);
     }
 }

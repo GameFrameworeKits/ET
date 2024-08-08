@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ET.Client
@@ -25,7 +26,7 @@ namespace ET.Client
             LoginHelper.Login(
                 self.Root(),
                 self.account.GetComponent<InputField>().text,
-                self.password.GetComponent<InputField>().text).Coroutine();
+                self.password.GetComponent<InputField>().text).Forget();
         }
     }
 }

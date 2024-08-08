@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -61,7 +62,7 @@ namespace ET
             this.fibers = null;
         }
 
-        public async ETTask<int> Create(SchedulerType schedulerType, int fiberId, int zone, SceneType sceneType, string name)
+        public async UniTask<int> Create(SchedulerType schedulerType, int fiberId, int zone, SceneType sceneType, string name)
         {
             try
             {
@@ -80,7 +81,7 @@ namespace ET
                     try
                     {
                         // 根据Fiber的SceneType分发Init,必须在Fiber线程中执行
-                        await EventSystem.Instance.Invoke<FiberInit, ETTask>((long)sceneType, new FiberInit() {Fiber = fiber});
+                        await EventSystem.Instance.Invoke<FiberInit, UniTask>((long)sceneType, new FiberInit() {Fiber = fiber});
                         tcs.SetResult(true);
                     }
                     catch (Exception e)
@@ -98,13 +99,13 @@ namespace ET
             }
         }
         
-        public async ETTask<int> Create(SchedulerType schedulerType, int zone, SceneType sceneType, string name)
+        public async UniTask<int> Create(SchedulerType schedulerType, int zone, SceneType sceneType, string name)
         {
             int fiberId = Interlocked.Increment(ref this.idGenerator);
             return await this.Create(schedulerType, fiberId, zone, sceneType, name);
         }
         
-        public async ETTask Remove(int id)
+        public async UniTask Remove(int id)
         {
             Fiber fiber = this.Get(id);
             TaskCompletionSource<bool> tcs = new();

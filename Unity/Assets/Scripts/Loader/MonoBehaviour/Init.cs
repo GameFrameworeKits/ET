@@ -1,5 +1,6 @@
 ﻿using System;
 using CommandLine;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace ET
@@ -8,10 +9,10 @@ namespace ET
 	{
 		private void Start()
 		{
-			this.StartAsync().Coroutine();
+			this.StartAsync().Forget();
 		}
 		
-		private async ETTask StartAsync()
+		private async UniTaskVoid StartAsync()
 		{
 			DontDestroyOnLoad(gameObject);
 			
@@ -28,8 +29,6 @@ namespace ET
 			Options.Instance.StartConfig = $"StartConfig/Localhost";
 			
 			World.Instance.AddSingleton<Logger>().Log = new UnityLogger();
-			ETTask.ExceptionHandler += Log.Error;
-			
 			World.Instance.AddSingleton<TimeInfo>();
 			World.Instance.AddSingleton<FiberManager>();
 

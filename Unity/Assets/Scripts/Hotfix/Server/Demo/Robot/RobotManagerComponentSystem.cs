@@ -1,4 +1,6 @@
-﻿namespace ET.Server
+﻿using Cysharp.Threading.Tasks;
+
+namespace ET.Server
 {
     [EntitySystemOf(typeof(RobotManagerComponent))]
     [FriendOf(typeof(RobotManagerComponent))]
@@ -12,18 +14,18 @@
         [EntitySystem]
         private static void Destroy(this RobotManagerComponent self)
         {
-            async ETTask Remove(int f)
+            async UniTask Remove(int f)
             {
                 await FiberManager.Instance.Remove(f);
             }
             
             foreach (int fiberId in self.robots)
             {
-                Remove(fiberId).Coroutine();
+                Remove(fiberId).Forget();
             }
         }
 
-        public static async ETTask NewRobot(this RobotManagerComponent self, string account)
+        public static async UniTask NewRobot(this RobotManagerComponent self, string account)
         {
             int robot = await FiberManager.Instance.Create(SchedulerType.ThreadPool, self.Zone(), SceneType.Robot, account);
             self.robots.Add(robot);

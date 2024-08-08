@@ -1,8 +1,10 @@
+using Cysharp.Threading.Tasks;
+
 namespace ET.Client
 {
     public static class LoginHelper
     {
-        public static async ETTask Login(Scene root, string account, string password)
+        public static async UniTask Login(Scene root, string account, string password)
         {
             root.RemoveComponent<ClientSenderComponent>();
             

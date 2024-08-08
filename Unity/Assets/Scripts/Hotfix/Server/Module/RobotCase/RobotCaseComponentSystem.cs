@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
@@ -11,9 +10,9 @@ namespace ET.Server
             return ++self.N;
         }
         
-        public static async ETTask<RobotCase> New(this RobotCaseComponent self)
+        public static async UniTask<RobotCase> New(this RobotCaseComponent self)
         {
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
             RobotCase robotCase = self.AddChild<RobotCase>();
             return robotCase;
         }

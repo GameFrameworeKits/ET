@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace ET.Client
@@ -6,7 +7,7 @@ namespace ET.Client
     [UIEvent(UIType.UILSRoom)]
     public class UILSRoomEvent: AUIEvent
     {
-        public override async ETTask<UI> OnCreate(UIComponent uiComponent, UILayer uiLayer)
+        public override async UniTask<UI> OnCreate(UIComponent uiComponent, UILayer uiLayer)
         {
             string assetsName = $"Assets/Bundles/UI/LockStep/{UIType.UILSRoom}.prefab";
             GameObject bundleGameObject = await uiComponent.Room().GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);

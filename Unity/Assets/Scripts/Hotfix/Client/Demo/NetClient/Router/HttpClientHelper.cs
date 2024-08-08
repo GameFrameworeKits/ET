@@ -1,13 +1,12 @@
 using System;
-using System.IO;
 using System.Net.Http;
-using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
     public static partial class HttpClientHelper
     {
-        public static async ETTask<string> Get(string link)
+        public static async UniTask<string> Get(string link)
         {
             try
             {

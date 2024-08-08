@@ -1,11 +1,12 @@
 using System;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
     [ConsoleHandler(ConsoleMode.ReloadConfig)]
     public class ReloadConfigConsoleHandler: IConsoleHandler
     {
-        public async ETTask Run(Fiber fiber, ModeContex contex, string content)
+        public async UniTask Run(Fiber fiber, ModeContex contex, string content)
         {
             switch (content)
             {
@@ -27,8 +28,6 @@ namespace ET
                     Log.Console($"reload config {configName} finish!");
                     break;
             }
-            
-            await ETTask.CompletedTask;
         }
     }
 }

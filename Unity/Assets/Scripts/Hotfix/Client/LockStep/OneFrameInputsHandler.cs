@@ -1,11 +1,11 @@
-using System;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
     [MessageHandler(SceneType.LockStep)]
     public class OneFrameInputsHandler: MessageHandler<Scene, OneFrameInputs>
     {
-        protected override async ETTask Run(Scene root, OneFrameInputs input)
+        protected override async UniTask Run(Scene root, OneFrameInputs input)
         {
             using var _ = input ; // 方法结束时回收消息
             Room room = root.GetComponent<Room>();
@@ -44,7 +44,7 @@ namespace ET.Client
                     room.SendHash(room.AuthorityFrame);
                 }
             }
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

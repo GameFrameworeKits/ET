@@ -1,12 +1,13 @@
 using System;
 using System.Reflection;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
     [ConsoleHandler(ConsoleMode.Robot)]
     public class RobotConsoleHandler: IConsoleHandler
     {
-        public async ETTask Run(Fiber fiber, ModeContex contex, string content)
+        public async UniTask Run(Fiber fiber, ModeContex contex, string content)
         {
             string[] ss = content.Split(" ");
             switch (ss[0])
@@ -21,7 +22,7 @@ namespace ET.Server
                     try
                     {
                         Log.Debug($"run case start: {caseType}");
-                        await EventSystem.Instance.Invoke<RobotInvokeArgs, ETTask>(caseType, new RobotInvokeArgs() { Fiber = fiber, Content = content });
+                        await EventSystem.Instance.Invoke<RobotInvokeArgs, UniTask>(caseType, new RobotInvokeArgs() { Fiber = fiber, Content = content });
                         Log.Debug($"run case finish: {caseType}");
                     }
                     catch (Exception e)
@@ -44,7 +45,7 @@ namespace ET.Server
                         try
                         {
                             Log.Debug($"run case start: {caseType}");
-                            await EventSystem.Instance.Invoke<RobotInvokeArgs, ETTask>(caseType, new RobotInvokeArgs() { Fiber = fiber, Content = content});
+                            await EventSystem.Instance.Invoke<RobotInvokeArgs, UniTask>(caseType, new RobotInvokeArgs() { Fiber = fiber, Content = content});
                             Log.Debug($"---------run case finish: {caseType}");
                         }
                         catch (Exception e)
@@ -56,7 +57,7 @@ namespace ET.Server
                     break;
                 }
             }
-            await ETTask.CompletedTask;
+            await UniTask.CompletedTask;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using YooAsset;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -48,7 +49,7 @@ namespace ET
             YooAssets.Destroy();
         }
 
-        public async ETTask CreatePackageAsync(string packageName, bool isDefault = false)
+        public async UniTask CreatePackageAsync(string packageName, bool isDefault = false)
         {
             ResourcePackage package = YooAssets.CreatePackage(packageName);
             if (isDefault)
@@ -148,7 +149,7 @@ namespace ET
         /// 主要用来加载dll config aotdll，因为这时候纤程还没创建，无法使用ResourcesLoaderComponent。
         /// 游戏中的资源应该使用ResourcesLoaderComponent来加载
         /// </summary>
-        public async ETTask<T> LoadAssetAsync<T>(string location) where T : UnityEngine.Object
+        public async UniTask<T> LoadAssetAsync<T>(string location) where T : UnityEngine.Object
         {
             AssetHandle handle = YooAssets.LoadAssetAsync<T>(location);
             await handle.Task;
@@ -161,7 +162,7 @@ namespace ET
         /// 主要用来加载dll config aotdll，因为这时候纤程还没创建，无法使用ResourcesLoaderComponent。
         /// 游戏中的资源应该使用ResourcesLoaderComponent来加载
         /// </summary>
-        public async ETTask<Dictionary<string, T>> LoadAllAssetsAsync<T>(string location) where T : UnityEngine.Object
+        public async UniTask<Dictionary<string, T>> LoadAllAssetsAsync<T>(string location) where T : UnityEngine.Object
         {
             AllAssetsHandle allAssetsOperationHandle = YooAssets.LoadAllAssetsAsync<T>(location);
             await allAssetsOperationHandle.Task;

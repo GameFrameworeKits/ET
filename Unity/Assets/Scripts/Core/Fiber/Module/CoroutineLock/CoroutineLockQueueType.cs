@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -27,7 +28,7 @@ namespace ET
             self.RemoveChild(key);
         }
 
-        public static async ETTask<CoroutineLock> Wait(this CoroutineLockQueueType self, long key, int time)
+        public static async UniTask<CoroutineLock> Wait(this CoroutineLockQueueType self, long key, int time)
         {
             CoroutineLockQueue queue = self.Get(key) ?? self.New(key);
             return await queue.Wait(time);

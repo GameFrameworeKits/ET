@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 #if DOTNET || UNITY_STANDALONE
 using System.Threading.Tasks;
 #endif
@@ -28,18 +29,18 @@ namespace ET
         {
         }
 
-        public async ETTask Reload(Type configType)
+        public async UniTask Reload(Type configType)
         {
             GetOneConfigBytes getOneConfigBytes = new() { ConfigName = configType.Name };
-            var oneConfigBytes = await EventSystem.Instance.Invoke<GetOneConfigBytes, ETTask<ByteBuf>>(getOneConfigBytes);
+            var oneConfigBytes = await EventSystem.Instance.Invoke<GetOneConfigBytes, UniTask<ByteBuf>>(getOneConfigBytes);
             LoadOneConfig(configType, oneConfigBytes);
             ResolveRef(); //热重载某一个配置的时候也要触发所有配置否则可能会引起各种引用丢失问题 不确定是否还有潜在问题 热重载配置还需观察
         }
 
-        public async ETTask LoadAsync()
+        public async UniTask LoadAsync()
         {
             this.allConfig.Clear();
-            var configBytes = await EventSystem.Instance.Invoke<GetAllConfigBytes, ETTask<Dictionary<Type, ByteBuf>>>(new GetAllConfigBytes());
+            var configBytes = await EventSystem.Instance.Invoke<GetAllConfigBytes, UniTask<Dictionary<Type, ByteBuf>>>(new GetAllConfigBytes());
 
 #if UNITY_WEBGL
 			foreach (Type type in configBytes.Keys)

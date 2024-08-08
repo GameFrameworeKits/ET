@@ -1,9 +1,11 @@
-﻿namespace ET.Client
+﻿using Cysharp.Threading.Tasks;
+
+namespace ET.Client
 {
 	[MessageHandler(SceneType.Demo)]
 	public class M2C_CreateUnitsHandler: MessageHandler<Scene, M2C_CreateUnits>
 	{
-		protected override async ETTask Run(Scene root, M2C_CreateUnits message)
+		protected override async UniTask Run(Scene root, M2C_CreateUnits message)
 		{
 			Scene currentScene = root.CurrentScene();
 			UnitComponent unitComponent = currentScene.GetComponent<UnitComponent>();
@@ -16,7 +18,7 @@
 				}
 				Unit unit = UnitFactory.Create(currentScene, unitInfo);
 			}
-			await ETTask.CompletedTask;
+			await UniTask.CompletedTask;
 		}
 	}
 }

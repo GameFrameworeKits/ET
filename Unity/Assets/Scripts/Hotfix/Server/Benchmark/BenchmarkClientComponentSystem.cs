@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Net.Sockets;
-using ET.Client;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Server
 {
@@ -12,17 +11,17 @@ namespace ET.Server
         {
             for (int i = 0; i < 2; ++i)
             {
-                self.Start().Coroutine();
+                self.Start().Forget();
             }
         }
 
-        private static async ETTask Start(this BenchmarkClientComponent self)
+        private static async UniTask Start(this BenchmarkClientComponent self)
         {
             NetComponent netClientComponent = self.Root().GetComponent<NetComponent>();
             using Session session = netClientComponent.Create(StartSceneConfigCategory.Instance.Benchmark.OuterIPPort);
-            List<ETTask> list = new List<ETTask>(1000);
+            List<UniTask> list = new List<UniTask>(1000);
 
-            async ETTask Call(Session s)
+            async UniTask Call(Session s)
             {
                 using G2C_Benchmark benchmark = await s.Call(C2G_Benchmark.Create()) as G2C_Benchmark;
             }
@@ -34,7 +33,7 @@ namespace ET.Server
                 {
                     list.Add(Call(session));
                 }
-                await ETTaskHelper.WaitAll(list);
+                await UniTask.WhenAll(list);
             }
         }
     }

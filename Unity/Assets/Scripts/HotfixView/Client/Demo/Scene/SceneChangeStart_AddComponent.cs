@@ -1,12 +1,13 @@
 using System;
 using UnityEngine.SceneManagement;
+using Cysharp.Threading.Tasks;
 
 namespace ET.Client
 {
     [Event(SceneType.Demo)]
     public class SceneChangeStart_AddComponent: AEvent<Scene, SceneChangeStart>
     {
-        protected override async ETTask Run(Scene root, SceneChangeStart args)
+        protected override async UniTask Run(Scene root, SceneChangeStart args)
         {
             try
             {

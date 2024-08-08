@@ -1,9 +1,11 @@
-﻿namespace ET.Client
+﻿using Cysharp.Threading.Tasks;
+
+namespace ET.Client
 {
     [Event(SceneType.Current)]
     public class SceneChangeFinishEvent_CreateUIHelp : AEvent<Scene, SceneChangeFinish>
     {
-        protected override async ETTask Run(Scene scene, SceneChangeFinish args)
+        protected override async UniTask Run(Scene scene, SceneChangeFinish args)
         {
             await UIHelper.Create(scene, UIType.UIHelp, UILayer.Mid);
         }
